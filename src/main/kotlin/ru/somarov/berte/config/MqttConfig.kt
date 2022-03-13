@@ -1,51 +1,56 @@
 package ru.somarov.berte.config
 
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.integration.dsl.*
+import org.springframework.integration.dsl.Channels
+import org.springframework.integration.dsl.IntegrationFlow
+import org.springframework.integration.dsl.IntegrationFlowDefinition
+import org.springframework.integration.dsl.IntegrationFlows
 import org.springframework.integration.mqtt.inbound.Mqttv5PahoMessageDrivenChannelAdapter
 import org.springframework.integration.mqtt.outbound.Mqttv5PahoMessageHandler
 import org.springframework.integration.mqtt.support.MqttHeaderMapper
-import org.springframework.messaging.Message
-import org.springframework.messaging.MessageHeaders
 import org.springframework.messaging.converter.SmartMessageConverter
 import ru.somarov.berte.hessian.HessianMessageConverter
 
-
 @Configuration
-class MqttConfig {
-    
-    val url: String = "URL"
+@ConditionalOnProperty(name = ["app.mqtt.enable"], havingValue = "true", matchIfMissing = false)
+class MqttConfig(
+    @Value("{app.mqtt.url}") val url: String,
+    @Value("{app.mqtt.inClientId}") val inClientId: String,
+    @Value("{app.mqtt.outClientId}") val outClientId: String,
+    @Value("{app.mqtt.inTopic}") val inTopic: String,
+    @Value("{app.mqtt.fromMqttChannelId}") val fromMqttChannelId: String,
+    @Value("#{app.mqtt.outboundHeaders}.split(',')") val outboundHeaders: Array<String>
+) {
 
     @Bean
     fun mqttInbound(): IntegrationFlow {
+        val messageProducer = Mqttv5PahoMessageDrivenChannelAdapter(url, inClientId, inTopic).also {
+            it.setPayloadType(String::class.java)
+            it.setMessageConverter(mqtConverter())
+            it.setManualAcks(true)
+        }
 
-        val messageProducer = Mqttv5PahoMessageDrivenChannelAdapter(url, "mqttv5SIin", "siTest")
-        messageProducer.setPayloadType(String::class.java)
-        messageProducer.setMessageConverter(mqtConverter())
-        messageProducer.setManualAcks(true)
-
-        return IntegrationFlows.from(messageProducer)
-            .channel { c: Channels -> c.queue("fromMqttChannel") }
-            .get()
+        return IntegrationFlows.from(messageProducer).channel { c: Channels -> c.queue(fromMqttChannelId) }.get()
     }
 
     @Bean
     fun mqttOutboundFlow(): IntegrationFlow {
-        val messageHandler = Mqttv5PahoMessageHandler(url, "mqttv5SIout")
-        val mqttHeaderMapper = MqttHeaderMapper()
-        mqttHeaderMapper.setOutboundHeaderNames("some_user_header", MessageHeaders.CONTENT_TYPE)
-        messageHandler.setHeaderMapper(mqttHeaderMapper)
-        messageHandler.setAsync(true)
-        messageHandler.setAsyncEvents(true)
-        messageHandler.setConverter(mqtConverter())
-
-        return IntegrationFlow { f: IntegrationFlowDefinition<*> ->
-            f.handle(messageHandler)
+        val mqttHeaderMapper = MqttHeaderMapper().also { it.setOutboundHeaderNames(*outboundHeaders) }
+        val messageHandler = Mqttv5PahoMessageHandler(url, outClientId).also {
+            it.setHeaderMapper(mqttHeaderMapper)
+            it.setAsync(true)
+            it.setAsyncEvents(true)
+            it.setConverter(mqtConverter())
         }
+
+        return IntegrationFlow { f: IntegrationFlowDefinition<*> -> f.handle(messageHandler) }
     }
 
-    private fun mqtConverter(): SmartMessageConverter {
+    @Bean
+    fun mqtConverter(): SmartMessageConverter {
         return HessianMessageConverter()
     }
 }
