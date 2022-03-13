@@ -9,6 +9,7 @@ import org.springframework.integration.mqtt.support.MqttHeaderMapper
 import org.springframework.messaging.Message
 import org.springframework.messaging.MessageHeaders
 import org.springframework.messaging.converter.SmartMessageConverter
+import ru.somarov.berte.hessian.HessianMessageConverter
 
 
 @Configuration
@@ -45,25 +46,6 @@ class MqttConfig {
     }
 
     private fun mqtConverter(): SmartMessageConverter {
-        val converter = object : SmartMessageConverter  {
-            override fun fromMessage(message: Message<*>, targetClass: Class<*>, conversionHint: Any?): Any? {
-                TODO("Not yet implemented")
-            }
-
-            override fun fromMessage(message: Message<*>, targetClass: Class<*>): Any? {
-                TODO("Not yet implemented")
-            }
-
-            override fun toMessage(payload: Any, headers: MessageHeaders?, conversionHint: Any?): Message<*>? {
-                TODO("Not yet implemented")
-            }
-
-            override fun toMessage(payload: Any, headers: MessageHeaders?): Message<*>? {
-                TODO("Not yet implemented")
-            }
-
-
-        }
-        return converter
+        return HessianMessageConverter()
     }
 }
