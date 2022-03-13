@@ -10,7 +10,9 @@ import java.util.*
 class UserService(private val dao: Dao) {
 
     fun register(email: String): Mono<User> {
-        return dao.saveUser(User(UUID.randomUUID(), email))
+        val user = User(UUID.randomUUID(), email)
+        dao.saveUser(user)
+        return Mono.just(user)
     }
 
     fun get(email: String): Mono<User> {
