@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.HandlerMapping
 import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping
+import org.springframework.web.reactive.socket.client.ReactorNettyWebSocketClient
+import org.springframework.web.reactive.socket.client.WebSocketClient
 import ru.somarov.berte.websocket.WSSocketHandler
 
 
@@ -14,19 +16,16 @@ import ru.somarov.berte.websocket.WSSocketHandler
 class WebSocketConfig(@Value("#{'\${app.websocket.paths}'.split(',')}") val paths: Array<String>) {
 
     @Bean
-    fun webSocketHandlerMapping(): HandlerMapping {
-        val map: MutableMap<String, WSSocketHandler> = HashMap()
-        paths.forEach { map[it] = handler() }
-        val handlerMapping = SimpleUrlHandlerMapping()
-        handlerMapping.order = 1
-        handlerMapping.urlMap = map
-        return handlerMapping
+    fun webSocketClient(): WebSocketClient {
+        return ReactorNettyWebSocketClient()
     }
 
     @Bean
-    fun handler(): WSSocketHandler {
-        return WSSocketHandler()
+    fun webSocketHandlerMapping(handler: WSSocketHandler): HandlerMapping {
+        return SimpleUrlHandlerMapping().also {
+            it.order = 1
+            it.urlMap = HashMap<String, WSSocketHandler>().also { paths.forEach { path -> it[path] = handler } }
+        }
     }
-
 
 }
