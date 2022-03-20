@@ -24,11 +24,11 @@ class WSSocketHandler : WebSocketHandler {
                 hessian.startMessage()
                 val message: SimpleMessage = hessian.readObject(SimpleMessage::class.java) as SimpleMessage
                 hessian.completeMessage()
-                log.info(message.value)
+                log.info(message.value + " " + message.id)
                 inpstrm.close()
                 hessian.close()
+                it.retain()
             }
-
-        return session.send(Flux.from(flux))
+        return session.send(flux)
     }
 }

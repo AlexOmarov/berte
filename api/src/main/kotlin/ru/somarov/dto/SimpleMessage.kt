@@ -1,3 +1,5 @@
 package ru.somarov.dto
 
-data class SimpleMessage(val value: String): java.io.Serializable
+import java.util.*
+
+data class SimpleMessage(val value: String, val id: UUID): java.io.Serializable

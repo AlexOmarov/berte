@@ -26,13 +26,12 @@
 			<artifactId>spring-boot-starter-quartz</artifactId>
 		</dependency>
 
-		<!-- MQTT -->
+		<!--RSOCKET-->
 
-<!--		<dependency>
-			<groupId>ru.somarov</groupId>
-			<artifactId>api</artifactId>
-			<version>${project.version}</version>
-		</dependency>-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-rsocket</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.integration</groupId>
@@ -48,23 +47,14 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.30</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
-			<version>1.2.3</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.eclipse.paho</groupId>
-			<artifactId>org.eclipse.paho.mqttv5.client</artifactId>
-			<version>1.2.5</version>
 		</dependency>
 
 		<!-- Hessian -->
