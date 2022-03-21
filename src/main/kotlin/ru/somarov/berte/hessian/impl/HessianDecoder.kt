@@ -1,4 +1,4 @@
-package ru.somarov.berte.hessian
+package ru.somarov.berte.hessian.impl
 
 import org.reactivestreams.Publisher
 import org.springframework.core.ResolvableType
@@ -10,17 +10,17 @@ import org.springframework.util.MimeType
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.publisher.SynchronousSink
-import ru.somarov.dto.SimpleMessage
+import ru.somarov.berte.hessian.HessianCodecSupport
 
-class HessianDecoder: HessianCodecSupport<SimpleMessage>(), HttpMessageDecoder<SimpleMessage> {
+class HessianDecoder: HessianCodecSupport<Any>(), HttpMessageDecoder<Any> {
 
     override fun decode(
         inputStream: Publisher<DataBuffer>,
         elementType: ResolvableType,
         mimeType: MimeType?,
         hints: MutableMap<String, Any>?
-    ): Flux<SimpleMessage> {
-        return Flux.from(inputStream).handle { buffer: DataBuffer, sink: SynchronousSink<SimpleMessage> ->
+    ): Flux<Any> {
+        return Flux.from(inputStream).handle { buffer: DataBuffer, sink: SynchronousSink<Any> ->
             sink.next(decode(buffer))
         }
     }
@@ -34,8 +34,8 @@ class HessianDecoder: HessianCodecSupport<SimpleMessage>(), HttpMessageDecoder<S
         elementType: ResolvableType,
         mimeType: MimeType?,
         hints: MutableMap<String, Any>?
-    ): Mono<SimpleMessage> {
-        return Mono.from(inputStream).handle { dataBuffer: DataBuffer, sink: SynchronousSink<SimpleMessage> ->
+    ): Mono<Any> {
+        return Mono.from(inputStream).handle { dataBuffer: DataBuffer, sink: SynchronousSink<Any> ->
             sink.next(decode(dataBuffer))
         }
     }

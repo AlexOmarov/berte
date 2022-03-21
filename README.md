@@ -72,14 +72,13 @@ Note, that by default container will run using `application-dev.properties`
 If you want to get total coverage and sonar analysis with local changes, then you should run following tasks:
 ```
 ./mvnw clean verify test
-./mvnw clean verify sonar:sonar -D'sonar.host.url'=http://localhost:9000 -D'sonar.login'=656e2bf6d5579d8ef7efae43c5ef682bc19705f9
+./mvnw clean verify sonar:sonar -D'sonar.host.url'=<HOST> -D'sonar.login'=<PROJECT_TOKEN>
 ```
 Then, jacoco test report with coverage will be generated on local machine in build folder
 and sonar analysis will take place on server and will be visible on sonarcloud instance.
 Also, it is recommended to install [SonarLint](https://plugins.jetbrains.com/plugin/7973-sonarlint) 
-Intellij plugin for integration of code
-quality analysis more native-like
-Also, there is a possibility to configure jacoco coverage as a replace for common Idea coverage
+Intellij plugin for integration of code quality analysis more native-like
+Also, there is a possibility to configure jacoco coverage as a replacement for common Idea coverage
 analyzer (it's optional)
 
 ## API

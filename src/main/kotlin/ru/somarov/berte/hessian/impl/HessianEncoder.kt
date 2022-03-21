@@ -1,4 +1,4 @@
-package ru.somarov.berte.hessian
+package ru.somarov.berte.hessian.impl
 
 import org.reactivestreams.Publisher
 import org.springframework.core.ResolvableType
@@ -9,10 +9,10 @@ import org.springframework.http.codec.HttpMessageEncoder
 import org.springframework.util.MimeType
 import reactor.core.publisher.Flux
 import reactor.core.publisher.SynchronousSink
-import ru.somarov.dto.SimpleMessage
+import ru.somarov.berte.hessian.HessianCodecSupport
 
 
-class HessianEncoder : HessianCodecSupport<SimpleMessage>(), HttpMessageEncoder<SimpleMessage> {
+class HessianEncoder : HessianCodecSupport<Any>(), HttpMessageEncoder<Any> {
 
     override fun getStreamingMediaTypes(): List<MediaType> {
         return HESSIAN_MEDIA_TYPES
@@ -23,18 +23,18 @@ class HessianEncoder : HessianCodecSupport<SimpleMessage>(), HttpMessageEncoder<
     }
 
     override fun encode(
-        inputStream: Publisher<out SimpleMessage>,
+        inputStream: Publisher<out Any>,
         bufferFactory: DataBufferFactory,
         elementType: ResolvableType,
         mimeType: MimeType?,
         hints: MutableMap<String, Any>?
     ): Flux<DataBuffer> {
         return Flux.from(inputStream)
-            .handle { obj: SimpleMessage, sink: SynchronousSink<DataBuffer> -> sink.next(encode(obj, bufferFactory)) }
+            .handle { obj: Any, sink: SynchronousSink<DataBuffer> -> sink.next(encode(obj, bufferFactory)) }
     }
 
     override fun encodeValue(
-        value: SimpleMessage,
+        value: Any,
         bufferFactory: DataBufferFactory,
         valueType: ResolvableType,
         mimeType: MimeType?,

@@ -9,15 +9,14 @@ import org.springframework.http.MediaType
 import org.springframework.util.MimeType
 import org.springframework.util.MimeTypeUtils
 
+abstract class HessianCodecSupport<T> {
 
-open class HessianCodecSupport<T> {
-
-    inline fun <reified T> decode(dataBuffer: DataBuffer): T {
+     fun decode(dataBuffer: DataBuffer): T {
         val inpStr = dataBuffer.asInputStream()
         val hessianSerializerInput = HessianSerializerInput(inpStr)
 
         hessianSerializerInput.startMessage()
-        val message: T = hessianSerializerInput.readObject(T::class.java) as T
+        val message: T = hessianSerializerInput.readObject() as T
         hessianSerializerInput.completeMessage()
 
         hessianSerializerInput.close()
@@ -27,7 +26,7 @@ open class HessianCodecSupport<T> {
         return message
     }
 
-    inline fun <reified T> encode(obj: T, bufferFactory: DataBufferFactory): DataBuffer {
+    fun encode(obj: T, bufferFactory: DataBufferFactory): DataBuffer {
         val dataBuffer = bufferFactory.allocateBuffer()
         val outStr = dataBuffer.asOutputStream()
         val output = HessianSerializerOutput(outStr)

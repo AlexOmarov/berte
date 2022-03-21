@@ -6,6 +6,15 @@ import ru.somarov.berte.domain.entity.User
 import ru.somarov.berte.domain.repo.Dao
 import java.util.*
 
+/**
+ * Service for handling interactions with user
+ *
+ * @version 1.0.0
+ * @since 1.0.0
+ * @author alexandr.omarov
+ *
+ */
+
 @Service
 class UserService(private val dao: Dao) {
 

@@ -7,6 +7,14 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.web.server.SecurityWebFilterChain
 
+/**
+ * Configuration of Spring security
+ *
+ * @version 1.0.0
+ * @since 1.0.0
+ * @author alexandr.omarov
+ *
+ */
 
 @Configuration
 @EnableWebFluxSecurity

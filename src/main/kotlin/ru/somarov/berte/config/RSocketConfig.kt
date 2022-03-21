@@ -8,27 +8,30 @@ import org.springframework.messaging.rsocket.RSocketStrategies
 import org.springframework.messaging.rsocket.annotation.support.RSocketMessageHandler
 import org.springframework.util.MimeType
 import reactor.util.retry.Retry
-import ru.somarov.berte.hessian.HessianDecoder
-import ru.somarov.berte.hessian.HessianEncoder
+import ru.somarov.berte.hessian.impl.HessianDecoder
+import ru.somarov.berte.hessian.impl.HessianEncoder
 import java.net.URI
 import java.time.Duration
 
+/**
+ * Configuration of RSocket
+ *
+ * @version 1.0.0
+ * @since 1.0.0
+ * @author alexandr.omarov
+ *
+ */
 @Configuration
-class RsocketConfig {
+class RSocketConfig {
 
     @Bean
     fun  messageHandler(strategies: RSocketStrategies): RSocketMessageHandler {
         val handler = RSocketMessageHandler()
-        handler.rSocketStrategies = strategies
-        return handler
-    }
-
-    @Bean
-    fun strategies(): RSocketStrategies {
-        return RSocketStrategies.builder()
+        handler.rSocketStrategies = RSocketStrategies.builder()
             .encoders { it.add(HessianEncoder()) }
             .decoders { it.add(HessianDecoder()) }
             .build()
+        return handler
     }
 
     @Bean
@@ -44,7 +47,10 @@ class RsocketConfig {
                 )
             }
             .dataMimeType(MimeType("application", "x-hessian"))
-            .rsocketStrategies(strategies())
+            .rsocketStrategies(RSocketStrategies.builder()
+                .encoders { it.add(HessianEncoder()) }
+                .decoders { it.add(HessianDecoder()) }
+                .build())
             .websocket(URI.create("http://localhost:7000/rsocket"))
     }
 }
