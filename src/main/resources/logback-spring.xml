@@ -1,0 +1,26 @@
+<configuration>
+
+    <springProperty scope="context" name="SERVICE_NAME" source="spring.application.name" defaultValue="SERVICE_NAME"/>
+    <springProperty scope="context" name="APPENDERS" source="app.logback.appenders" defaultValue="stdout"/>
+    <springProperty scope="context" name="ELK_PORT" source="app.logback.appender.elk.port" defaultValue="5043"/>
+    <springProperty scope="context" name="ELK_HOST" source="app.logback.appender.elk.host" defaultValue="localhost"/>
+
+    <if condition='property("APPENDERS").contains("stdout")'>
+        <then>
+            <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+                <encoder>
+                    <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+                </encoder>
+            </appender>
+        </then>
+    </if>
+
+    <root>
+        <if condition='property("APPENDERS").contains("stdout")'>
+            <then>
+                <appender-ref ref="STDOUT"/>
+            </then>
+        </if>
+    </root>
+
+</configuration>

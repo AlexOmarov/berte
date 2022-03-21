@@ -38,7 +38,6 @@ open class HessianCodecSupport<T> {
 
         outStr.close()
         output.close()
-        //DataBufferUtils.retain(dataBuffer)
         return dataBuffer
     }
 
