@@ -9,7 +9,6 @@ Backend server of Transpodia game.
 - [Requirements](#requirements)
 - [Quick Start](#quick-start)
 - [API](#requirements)
-- [Links](#links)
 
 ## Introduction
 Berte is responsible for processing all client's data on backend.  
@@ -72,8 +71,8 @@ Note, that by default container will run using `application-dev.properties`
 
 If you want to get total coverage and sonar analysis with local changes, then you should run following tasks:
 ```
-<maven command> test jacocoTestReport printTotalCoverage
-<maven command> sonar
+./mvnw clean verify test
+./mvnw clean verify sonar:sonar -D'sonar.host.url'=http://localhost:9000 -D'sonar.login'=656e2bf6d5579d8ef7efae43c5ef682bc19705f9
 ```
 Then, jacoco test report with coverage will be generated on local machine in build folder
 and sonar analysis will take place on server and will be visible on sonarcloud instance.
@@ -89,7 +88,3 @@ analyzer (it's optional)
 All the service's web endpoints specification can be found on [Documents]()
 ### Esb events
 All the service's events specification can be found on [Documents]()
-
-## Links
-
-- [Sonarqube]()

@@ -13,3 +13,4 @@ Each contribution to master branch MUST include following steps:
 7. Updates of [api specs]() (if web endpoints have been changed)
 8. Updates of [events specs]() (if esb events have been changed)
 9. Updates of [Workflows schemas]() (if service scenarios have been changed)
+10. Sonarqube analysis must be passed
