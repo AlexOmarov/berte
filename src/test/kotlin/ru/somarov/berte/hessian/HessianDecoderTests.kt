@@ -12,7 +12,7 @@ class HessianDecoderTests {
 
     @Test
     fun `Decoder decodes incoming data buffer into message`() {
-        val decoder: HessianDecoder = HessianDecoder()
+        val decoder = HessianDecoder()
         val buffer = DefaultDataBufferFactory().allocateBuffer()
         val outStr = buffer.asOutputStream()
         val output = HessianSerializerOutput(outStr)
