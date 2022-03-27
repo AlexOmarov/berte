@@ -7,8 +7,8 @@ import java.util.UUID
 
 @Component
 class Dao(private val userRepo: UserRepo) {
-    fun saveUser(user: User) {
-        userRepo.insert(user.id, user.email)
+    fun saveUser(user: User): Mono<User> {
+        return userRepo.save(user)
     }
 
     fun getUser(email: String): Mono<User> {
