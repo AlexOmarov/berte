@@ -30,8 +30,6 @@ class RSocketControllerTests {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-
-
     @Test
     fun `test that messages API returns latest messages`() {
         val rSocketRequester = RSocketRequester.builder()
@@ -54,7 +52,6 @@ class RSocketControllerTests {
             .doOnNext {
                 log.info(it.value)
             }
-            .subscribeOn(Schedulers.parallel())
             .subscribe()
     }
 }
