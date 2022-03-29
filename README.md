@@ -30,6 +30,7 @@ There you can find:
  * Storing actual clients data
  * Creating maps for clients
  * Sending actual info to clients
+ * Rsocket endpoint with Hessian-coded payload
 
 ## Requirements
 The application can be run locally or in a docker container, 
@@ -38,6 +39,7 @@ the requirements for each setup are listed below.
 ### Local
 * [Java 17 SDK](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
 * [Maven >= 3.8](https://maven.apache.org/install.html)
+* [Postgres >= 13](https://hub.docker.com/_/postgres)
 
 ### Docker
 * [Docker](https://www.docker.com/get-docker)
@@ -63,9 +65,19 @@ $ <maven command> --args='--spring.profiles.active=local'
 ```
 
 ### Run Docker
-
-Use `docker-compose.yml` to build the image and create a container.
+Before launching, it is needed to build child module `api` and parent module `berte`
+```
+mvn verify clean install
+mvn package
+```
+Then, use `docker-compose.yml` to build the image and create a container.
 Note, that by default container will run using `application-dev.properties`
+Also, it is needed to add following env properties:
+```properties
+POSTGRES_USER=berte;POSTGRES_PASSWORD=berte;
+```
+Also, there may be a problem with new lines in properties file when trying to launch docker compose
+It is needed to disable `Use Docker Compose V2` in docker engine
 
 ### Run code quality assurance tasks
 
