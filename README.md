@@ -15,7 +15,7 @@ Berte is responsible for processing all client's data on backend.
 Processing means getting, storing, analyzing, creating new data
 
 ## Documentation
-All the service's documentation can be found in [Documents]()
+All the service's documentation can be found in `doc` folder
 There you can find:
 
 - Data model
@@ -96,6 +96,6 @@ analyzer (it's optional)
 ## API
 
 ### Web endpoints
-All the service's web endpoints specification can be found on [Documents]()
+All the service's web endpoints specification can be found in `doc` folder
 ### Esb events
-All the service's events specification can be found on [Documents]()
+All the service's events specification can be found in `doc` folder
