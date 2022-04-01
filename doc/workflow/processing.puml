@@ -1,0 +1,17 @@
+@startuml
+autonumber
+title Berte service workflow
+header Actual at 29.03.2022
+
+participant "Other systems" as side
+participant "Berte" as brt
+
+== Websocket message processing ==
+side++
+side -> brt++: Call main socket controller
+brt -> brt: Decrypt payload
+brt -> brt: Log message
+brt -> side: Send new SimpleMessage encrypted in Hessian
+side--
+
+@enduml

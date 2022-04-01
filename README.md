@@ -19,9 +19,7 @@ All the service's documentation can be found in `doc` folder
 There you can find:
 
 - Data model
-- Class diagram
 - Sequence diagram for all the flows which are performed by service
-- Description of all service integrations
 - Descriptions of service APIs, incoming and outcoming esb events
 - Some additional diagrams for better understanding of underlying processes
 
