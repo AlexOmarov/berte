@@ -9,6 +9,7 @@ import org.springframework.messaging.rsocket.annotation.support.RSocketMessageHa
 import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.rsocket.RSocketSecurity
 import org.springframework.security.config.annotation.rsocket.RSocketSecurity.AuthorizePayloadsSpec
+import org.springframework.security.messaging.handler.invocation.reactive.AuthenticationPrincipalArgumentResolver
 import org.springframework.security.rsocket.core.PayloadSocketAcceptorInterceptor
 import org.springframework.security.rsocket.metadata.SimpleAuthenticationEncoder
 import org.springframework.util.MimeType
@@ -37,6 +38,7 @@ class RSocketConfig {
             .encoders { it.add(HessianEncoder()); it.add(SimpleAuthenticationEncoder()) }
             .decoders { it.add(HessianDecoder()) }
             .build()
+        handler.argumentResolverConfigurer.addCustomResolver(AuthenticationPrincipalArgumentResolver())
         return handler
     }
 
@@ -44,7 +46,6 @@ class RSocketConfig {
     fun authorization(security: RSocketSecurity): PayloadSocketAcceptorInterceptor {
         security.authorizePayload { authorize: AuthorizePayloadsSpec ->
             authorize
-                .setup().hasRole("USER")
                 .anyRequest()
                 .authenticated()
         }.simpleAuthentication(Customizer.withDefaults())

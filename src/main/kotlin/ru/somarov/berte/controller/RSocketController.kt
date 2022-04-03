@@ -12,6 +12,7 @@ import ru.somarov.dto.SimpleMessage
 
 @Controller
 class RSocketController(val service: RSocketService) {
+
     @MessageMapping("main.{dest}")
     fun main(@DestinationVariable dest: String, @Payload message: SimpleMessage,
              @AuthenticationPrincipal details: DefaultUserDetails): Flux<SimpleMessage> {
