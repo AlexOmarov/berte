@@ -9,6 +9,7 @@ import org.springframework.http.codec.HttpMessageEncoder
 import org.springframework.util.MimeType
 import reactor.core.publisher.Flux
 import reactor.core.publisher.SynchronousSink
+import ru.somarov.berte.constant.Constants.HESSIAN_MIME_TYPE
 import ru.somarov.berte.hessian.HessianCodecSupport
 
 

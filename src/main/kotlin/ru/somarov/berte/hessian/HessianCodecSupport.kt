@@ -6,8 +6,7 @@ import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.core.io.buffer.DataBufferFactory
 import org.springframework.core.io.buffer.DataBufferUtils
 import org.springframework.http.MediaType
-import org.springframework.util.MimeType
-import org.springframework.util.MimeTypeUtils
+import ru.somarov.berte.constant.Constants.HESSIAN_MIME_TYPE
 
 abstract class HessianCodecSupport<T> {
 
@@ -41,7 +40,6 @@ abstract class HessianCodecSupport<T> {
     }
 
     companion object {
-        var HESSIAN_MIME_TYPE: MimeType = MimeTypeUtils.parseMimeType("application/x-hessian")
         var HESSIAN_MEDIA_TYPES = mutableListOf(MediaType.asMediaType(HESSIAN_MIME_TYPE))
         var HESSIAN_MIME_TYPES = mutableListOf(HESSIAN_MIME_TYPE)
     }

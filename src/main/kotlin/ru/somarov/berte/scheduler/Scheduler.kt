@@ -5,10 +5,10 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.messaging.rsocket.RSocketRequester
 import org.springframework.scheduling.annotation.Scheduled
-import org.springframework.security.rsocket.metadata.UsernamePasswordMetadata
+import org.springframework.security.rsocket.metadata.BearerTokenMetadata
 import org.springframework.stereotype.Component
-import org.springframework.util.MimeTypeUtils
 import reactor.core.scheduler.Schedulers
+import ru.somarov.berte.constant.Constants.RSOCKET_AUTHENTICATION_MIME_TYPE
 import ru.somarov.dto.SimpleMessage
 import java.util.*
 import kotlin.random.Random
@@ -25,10 +25,10 @@ class Scheduler(val rSocketRequester: RSocketRequester) {
 
     @Scheduled(fixedDelay = 1000)
     fun socket() {
-        val credentials = UsernamePasswordMetadata(user, "password")
+        val credentials = BearerTokenMetadata("")
         rSocketRequester
             .route("main.${Random.nextInt()}")
-            .metadata(credentials, MimeTypeUtils.parseMimeType("message/x.rsocket.authentication.v0"))
+            .metadata(credentials, RSOCKET_AUTHENTICATION_MIME_TYPE)
             .data(SimpleMessage("Rsocket request", UUID.randomUUID()))
             .retrieveFlux(SimpleMessage::class.java)
             .doOnNext {

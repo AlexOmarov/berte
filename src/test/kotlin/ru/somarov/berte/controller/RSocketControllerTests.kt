@@ -1,6 +1,5 @@
 package ru.somarov.berte.controller
 
-import io.rsocket.metadata.WellKnownMimeType
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.slf4j.LoggerFactory
@@ -13,11 +12,11 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import org.springframework.util.MimeTypeUtils
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import reactor.test.StepVerifier
+import ru.somarov.berte.constant.Constants.RSOCKET_AUTHENTICATION_MIME_TYPE
 import ru.somarov.berte.service.RSocketService
 import ru.somarov.dto.SimpleMessage
 import java.util.*
@@ -48,7 +47,7 @@ class RSocketControllerTests {
 
         val flux = rSocketRequester
             .route("main.${Random.nextInt()}")
-            .metadata(credentials, MimeTypeUtils.parseMimeType(WellKnownMimeType.MESSAGE_RSOCKET_AUTHENTICATION.string))
+            .metadata(credentials, RSOCKET_AUTHENTICATION_MIME_TYPE)
             .data(SimpleMessage("Rsocket request", UUID.randomUUID()))
             .retrieveFlux(SimpleMessage::class.java)
             .doOnNext {
@@ -77,8 +76,7 @@ class RSocketControllerTests {
 
         StepVerifier
             .create(flux)
-            .expectError(CancellationException::class.java)
-            .verify()
+            .verifyErrorMessage("Access Denied")
     }
 
     companion object Obj {

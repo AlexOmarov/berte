@@ -1,6 +1,7 @@
 package ru.somarov.berte.config
 
 import io.rsocket.core.RSocketConnector
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.messaging.rsocket.RSocketRequester
@@ -12,8 +13,8 @@ import org.springframework.security.config.annotation.rsocket.RSocketSecurity.Au
 import org.springframework.security.messaging.handler.invocation.reactive.AuthenticationPrincipalArgumentResolver
 import org.springframework.security.rsocket.core.PayloadSocketAcceptorInterceptor
 import org.springframework.security.rsocket.metadata.SimpleAuthenticationEncoder
-import org.springframework.util.MimeType
 import reactor.util.retry.Retry
+import ru.somarov.berte.constant.Constants
 import ru.somarov.berte.hessian.impl.HessianDecoder
 import ru.somarov.berte.hessian.impl.HessianEncoder
 import java.net.URI
@@ -30,6 +31,9 @@ import java.time.Duration
  */
 @Configuration
 class RSocketConfig {
+
+    @Value("\${app.rsocket.requester.uri}")
+    private lateinit var uri: String
 
     @Bean
     fun  messageHandler(): RSocketMessageHandler {
@@ -57,28 +61,13 @@ class RSocketConfig {
         val builder = RSocketRequester.builder()
         return builder
             .rsocketConnector { rSocketConnector: RSocketConnector ->
-                rSocketConnector.reconnect(
-                    Retry.fixedDelay(
-                        2,
-                        Duration.ofSeconds(2)
-                    )
-                )
+                rSocketConnector.reconnect(Retry.fixedDelay(2, Duration.ofSeconds(2)))
             }
-            .dataMimeType(MimeType("application", "x-hessian"))
+            .dataMimeType(Constants.HESSIAN_MIME_TYPE)
             .rsocketStrategies(RSocketStrategies.builder()
                 .encoders { it.add(HessianEncoder()); it.add(SimpleAuthenticationEncoder()) }
                 .decoders { it.add(HessianDecoder()) }
                 .build())
-            .websocket(URI.create("http://localhost:7000/rsocket"))
+            .websocket(URI.create(uri))
     }
-
-    /*
-    @Bean
-    fun springSecurityRSocketSecurity(interceptor: SecuritySocketAcceptorInterceptor): RSocketServerCustomizer {
-        return RSocketServerCustomizer { server ->
-            server.interceptors { registry ->
-                registry.forSocketAcceptor(interceptor)
-            }
-        }
-    }*/
 }
