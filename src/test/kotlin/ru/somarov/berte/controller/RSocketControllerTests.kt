@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.messaging.rsocket.RSocketRequester
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.rsocket.metadata.UsernamePasswordMetadata
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.DynamicPropertyRegistry
@@ -28,15 +27,12 @@ import kotlin.random.Random
 
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension::class)
-@SpringBootTest
 @Testcontainers
+@SpringBootTest(properties = ["app.scheduling.enabled=false"])
 class RSocketControllerTests {
 
     @Autowired
     private lateinit var service: RSocketService
-
-    @Autowired
-    private lateinit var passwordEncoder: PasswordEncoder
 
     @Autowired
     private lateinit var rSocketRequester: RSocketRequester

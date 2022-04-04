@@ -1,12 +1,10 @@
 package ru.somarov.berte.scheduler
 
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.messaging.rsocket.RSocketRequester
 import org.springframework.scheduling.annotation.Scheduled
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.rsocket.metadata.UsernamePasswordMetadata
 import org.springframework.stereotype.Component
 import org.springframework.util.MimeTypeUtils
@@ -25,11 +23,8 @@ class Scheduler(val rSocketRequester: RSocketRequester) {
     @Value("\${app.user}")
     private lateinit var user: String
 
-    @Autowired
-    private lateinit var encoder: PasswordEncoder
-
     @Scheduled(fixedDelay = 1000)
-    fun rsocket() {
+    fun socket() {
         val credentials = UsernamePasswordMetadata(user, "password")
         rSocketRequester
             .route("main.${Random.nextInt()}")
