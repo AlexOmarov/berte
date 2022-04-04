@@ -21,10 +21,8 @@ class DefaultUserDetailsService : ReactiveUserDetailsService {
     @Value("\${app.user}")
     private lateinit var user: String
 
-    override fun findByUsername(username: String?): Mono<UserDetails> {
+    override fun findByUsername(username: String): Mono<UserDetails> {
         val auths = mutableListOf<GrantedAuthority>(SimpleGrantedAuthority("ROLE_USER"))
-        return if (username == user) Mono.just(DefaultUserDetails(
-            UUID.randomUUID(), username, auths, passwordEncoder.encode("password")
-        )) else Mono.empty()
+        return Mono.just(DefaultUserDetails(UUID.randomUUID(), username, auths, passwordEncoder.encode("password")))
     }
 }

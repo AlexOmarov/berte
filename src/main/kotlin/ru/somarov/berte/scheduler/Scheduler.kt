@@ -30,7 +30,7 @@ class Scheduler(val rSocketRequester: RSocketRequester) {
 
     @Scheduled(fixedDelay = 1000)
     fun rsocket() {
-        val credentials = UsernamePasswordMetadata(user, encoder.encode("password"))
+        val credentials = UsernamePasswordMetadata(user, "password")
         rSocketRequester
             .route("main.${Random.nextInt()}")
             .metadata(credentials, MimeTypeUtils.parseMimeType("message/x.rsocket.authentication.v0"))

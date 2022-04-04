@@ -46,20 +46,11 @@ class RSocketConfig {
     fun authorization(security: RSocketSecurity): PayloadSocketAcceptorInterceptor {
         security.authorizePayload { authorize: AuthorizePayloadsSpec ->
             authorize
-                .anyRequest()
-                .authenticated()
+                .anyRequest().authenticated()
+                .anyExchange().permitAll()
         }.simpleAuthentication(Customizer.withDefaults())
         return security.build()
     }
-/*
-    @Bean
-    fun springSecurityRSocketSecurity(interceptor: SecuritySocketAcceptorInterceptor): RSocketServerCustomizer {
-        return RSocketServerCustomizer { server ->
-            server.interceptors { registry ->
-                registry.forSocketAcceptor(interceptor)
-            }
-        }
-    }*/
 
     @Bean
     fun rSocketRequester(): RSocketRequester {
@@ -80,4 +71,14 @@ class RSocketConfig {
                 .build())
             .websocket(URI.create("http://localhost:7000/rsocket"))
     }
+
+    /*
+    @Bean
+    fun springSecurityRSocketSecurity(interceptor: SecuritySocketAcceptorInterceptor): RSocketServerCustomizer {
+        return RSocketServerCustomizer { server ->
+            server.interceptors { registry ->
+                registry.forSocketAcceptor(interceptor)
+            }
+        }
+    }*/
 }
