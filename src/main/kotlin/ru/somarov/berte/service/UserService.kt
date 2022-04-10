@@ -18,10 +18,6 @@ import java.util.*
 @Service
 class UserService(private val dao: Dao) {
 
-    fun register(email: String): Mono<User> {
-        return dao.saveUser(User(null, email))
-    }
-
     fun get(email: String): Mono<User> {
         return dao.getUser(email)
     }

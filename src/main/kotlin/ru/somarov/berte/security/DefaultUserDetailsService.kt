@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
+import ru.somarov.berte.domain.entity.User
 import java.util.*
 
 @Service
@@ -22,6 +23,6 @@ class DefaultUserDetailsService : ReactiveUserDetailsService {
 
     override fun findByUsername(username: String): Mono<UserDetails> {
         val auths = mutableListOf<GrantedAuthority>(SimpleGrantedAuthority("ROLE_USER"))
-        return Mono.just(DefaultUserDetails(UUID.randomUUID(), username, auths, passwordEncoder.encode("password")))
+        return Mono.just(User(UUID.randomUUID(), username, passwordEncoder.encode("password"), auths))
     }
 }

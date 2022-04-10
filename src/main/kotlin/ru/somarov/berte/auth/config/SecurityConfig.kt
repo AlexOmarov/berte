@@ -1,4 +1,4 @@
-package ru.somarov.berte.config
+package ru.somarov.berte.auth.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

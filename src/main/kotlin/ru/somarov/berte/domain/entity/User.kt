@@ -1,7 +1,8 @@
 package ru.somarov.berte.domain.entity
 
-import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
+import org.springframework.security.core.userdetails.User
 import java.util.*
 
-@Table("berte_user") class User(@Id val id: UUID?, val email: String)
+@Table("security_user")
+class User(private val id: UUID, username: String, password: String, authorities: MutableCollection<out Role>) : User(username, password, authorities)
