@@ -16,9 +16,9 @@ import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import reactor.test.StepVerifier
-import ru.somarov.berte.constant.Constants.RSOCKET_AUTHENTICATION_MIME_TYPE
-import ru.somarov.berte.service.RSocketService
-import ru.somarov.dto.SimpleMessage
+import ru.somarov.berte.common.constant.Constants.RSOCKET_AUTHENTICATION_MIME_TYPE
+import ru.somarov.berte.game.service.RSocketService
+import ru.somarov.game.dto.SimpleMessage
 import java.util.*
 import java.util.concurrent.CancellationException
 import kotlin.random.Random
