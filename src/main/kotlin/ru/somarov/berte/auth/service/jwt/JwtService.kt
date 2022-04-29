@@ -18,6 +18,7 @@ class JwtService(private val props: AppProps) {
             .issueTime(Date())
             .expirationTime(Date(Date().time + props.security.jwt.accessExpiration.toMillis()))
             .subject(name)
+            .claim("scope", "PLAYER")
             .build()
         val payload = Payload(claims.toJSONObject())
         val header = JWSHeader(JWSAlgorithm.RS512)

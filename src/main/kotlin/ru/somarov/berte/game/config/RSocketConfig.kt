@@ -49,7 +49,7 @@ class RSocketConfig {
     fun authorization(security: RSocketSecurity, authenticationManager: ReactiveAuthenticationManager): PayloadSocketAcceptorInterceptor {
         security.authorizePayload { authorize: AuthorizePayloadsSpec ->
             authorize
-                .anyRequest().authenticated()
+                .anyRequest().hasRole("PLAYER")
                 .anyExchange().permitAll()
         }.jwt { it.authenticationManager(authenticationManager) }
         return security.build()

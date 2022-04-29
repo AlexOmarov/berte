@@ -126,7 +126,7 @@ class SecurityConfig(val props: AppProps) {
 
     @Bean
     fun authoritiesConverter(): JwtGrantedAuthoritiesConverter {
-        return JwtGrantedAuthoritiesConverter()
+        return JwtGrantedAuthoritiesConverter().also { it.setAuthorityPrefix("ROLE_") }
     }
 
     // Provider used in login endpoint
