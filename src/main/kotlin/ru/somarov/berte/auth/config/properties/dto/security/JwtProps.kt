@@ -10,8 +10,6 @@ import java.time.Duration
 
 data class JwtProps(
     val keystore: KeystoreProps,
-    val alias: String,
-    val alg: String,
     val accessExpiration: Duration,
     val refreshExpiration: Duration,
 ) {
@@ -23,6 +21,6 @@ data class JwtProps(
         val passwd = keystore.password.toCharArray()
         ks.load(stream, passwd)
 
-        keys = KeyPair(ks.getCertificate(alias).publicKey, ks.getKey(alias, passwd) as PrivateKey)
+        keys = KeyPair(ks.getCertificate(keystore.alias).publicKey, ks.getKey(keystore.alias, passwd) as PrivateKey)
     }
 }

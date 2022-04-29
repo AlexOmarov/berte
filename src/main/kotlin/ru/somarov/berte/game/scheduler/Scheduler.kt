@@ -20,7 +20,7 @@ class Scheduler(val rSocketRequester: RSocketRequester) {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    @Value("\${app.user}")
+    @Value("\${berte.user}")
     private lateinit var user: String
 
     @Scheduled(fixedDelay = 1000)

@@ -25,7 +25,7 @@ class HessianDecoderTests {
 
         outStr.close()
         output.close()
-        val result = decoder.decode(buffer) as SimpleMessage
+        val result = decoder.decode(SimpleMessage::class.java, buffer)
         Assertions.assertTrue(result.value == value && result.id == uuid)
     }
 }

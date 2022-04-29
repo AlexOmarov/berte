@@ -22,13 +22,17 @@ import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter
 import org.springframework.security.oauth2.server.resource.web.server.ServerBearerTokenAuthenticationConverter
 import org.springframework.security.web.server.SecurityWebFilterChain
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
+import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.util.pattern.PathPatternParser
+import reactor.core.publisher.Mono
 import ru.somarov.berte.auth.config.properties.AppProps
+import ru.somarov.berte.auth.security.DefaultUserDetailsService
 import java.security.SecureRandom
 import java.util.*
 
@@ -56,7 +60,7 @@ class SecurityConfig(val props: AppProps) {
     }
 
     @Bean
-    fun securityWebFilterChain(http: ServerHttpSecurity, authenticationManager: ReactiveAuthenticationManager): SecurityWebFilterChain {
+    fun securityWebFilterChain(http: ServerHttpSecurity, authenticationManagerResolver: ReactiveAuthenticationManagerResolver<ServerWebExchange>): SecurityWebFilterChain {
         return http
             // CSRF
             .csrf().disable()
@@ -77,8 +81,7 @@ class SecurityConfig(val props: AppProps) {
             ).and()
             // Authn
             .httpBasic().disable()
-            .formLogin().disable()
-            .oauth2Login().authenticationConverter(authenticationConverter()).authenticationManager(authenticationManager).and()
+            .formLogin().disable().oauth2ResourceServer().authenticationManagerResolver(authenticationManagerResolver).bearerTokenConverter(authenticationConverter()).and()
             .logout().and()
             // Authz
             .authorizeExchange()
@@ -90,6 +93,11 @@ class SecurityConfig(val props: AppProps) {
     @Bean
     fun reactiveAuthenticationManagerAdapter(authenticationManager: AuthenticationManager): ReactiveAuthenticationManager {
         return ReactiveAuthenticationManagerAdapter(authenticationManager)
+    }
+
+    @Bean
+    fun resolver(authenticationManager: ReactiveAuthenticationManager): ReactiveAuthenticationManagerResolver<ServerWebExchange> {
+        return ReactiveAuthenticationManagerResolver { Mono.just(authenticationManager) }
     }
 
     @Bean
@@ -116,10 +124,15 @@ class SecurityConfig(val props: AppProps) {
         return provider
     }
 
+    @Bean
+    fun authoritiesConverter(): JwtGrantedAuthoritiesConverter {
+        return JwtGrantedAuthoritiesConverter()
+    }
+
     // Provider used in login endpoint
     @Bean
     fun daoProvider(): DaoAuthenticationProvider {
-        return DaoAuthenticationProvider()
+        return DaoAuthenticationProvider().also { it.setUserDetailsService(DefaultUserDetailsService()) }
     }
 
 }

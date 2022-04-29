@@ -7,19 +7,18 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.messaging.rsocket.RSocketRequester
 import org.springframework.messaging.rsocket.RSocketStrategies
 import org.springframework.messaging.rsocket.annotation.support.RSocketMessageHandler
-import org.springframework.security.config.Customizer
+import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.config.annotation.rsocket.RSocketSecurity
 import org.springframework.security.config.annotation.rsocket.RSocketSecurity.AuthorizePayloadsSpec
 import org.springframework.security.messaging.handler.invocation.reactive.AuthenticationPrincipalArgumentResolver
 import org.springframework.security.rsocket.core.PayloadSocketAcceptorInterceptor
-import org.springframework.security.rsocket.metadata.SimpleAuthenticationEncoder
+import org.springframework.security.rsocket.metadata.BearerTokenAuthenticationEncoder
 import reactor.util.retry.Retry
 import ru.somarov.berte.common.constant.Constants
 import ru.somarov.berte.common.hessian.impl.HessianDecoder
 import ru.somarov.berte.common.hessian.impl.HessianEncoder
 import java.net.URI
 import java.time.Duration
-
 
 /**
  * Configuration of RSocket
@@ -32,14 +31,14 @@ import java.time.Duration
 @Configuration
 class RSocketConfig {
 
-    @Value("\${app.rsocket.requester.uri}")
+    @Value("\${berte.rsocket.requester.uri}")
     private lateinit var uri: String
 
     @Bean
     fun  messageHandler(): RSocketMessageHandler {
         val handler = RSocketMessageHandler()
         handler.rSocketStrategies = RSocketStrategies.builder()
-            .encoders { it.add(HessianEncoder()); it.add(SimpleAuthenticationEncoder()) }
+            .encoders { it.add(HessianEncoder()); it.add(BearerTokenAuthenticationEncoder()) }
             .decoders { it.add(HessianDecoder()) }
             .build()
         handler.argumentResolverConfigurer.addCustomResolver(AuthenticationPrincipalArgumentResolver())
@@ -47,12 +46,12 @@ class RSocketConfig {
     }
 
     @Bean
-    fun authorization(security: RSocketSecurity): PayloadSocketAcceptorInterceptor {
+    fun authorization(security: RSocketSecurity, authenticationManager: ReactiveAuthenticationManager): PayloadSocketAcceptorInterceptor {
         security.authorizePayload { authorize: AuthorizePayloadsSpec ->
             authorize
                 .anyRequest().authenticated()
                 .anyExchange().permitAll()
-        }.simpleAuthentication(Customizer.withDefaults())
+        }.jwt { it.authenticationManager(authenticationManager) }
         return security.build()
     }
 
@@ -65,7 +64,7 @@ class RSocketConfig {
             }
             .dataMimeType(Constants.HESSIAN_MIME_TYPE)
             .rsocketStrategies(RSocketStrategies.builder()
-                .encoders { it.add(HessianEncoder()); it.add(SimpleAuthenticationEncoder()) }
+                .encoders { it.add(HessianEncoder()); it.add(BearerTokenAuthenticationEncoder()) }
                 .decoders { it.add(HessianDecoder()) }
                 .build())
             .websocket(URI.create(uri))

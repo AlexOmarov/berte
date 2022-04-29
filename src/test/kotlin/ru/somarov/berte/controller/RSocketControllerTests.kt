@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.messaging.rsocket.RSocketRequester
-import org.springframework.security.rsocket.metadata.UsernamePasswordMetadata
+import org.springframework.security.rsocket.metadata.BearerTokenMetadata
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
@@ -16,6 +16,7 @@ import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import reactor.test.StepVerifier
+import ru.somarov.berte.auth.service.jwt.JwtService
 import ru.somarov.berte.common.constant.Constants.RSOCKET_AUTHENTICATION_MIME_TYPE
 import ru.somarov.berte.game.service.RSocketService
 import ru.somarov.game.dto.SimpleMessage
@@ -32,18 +33,21 @@ class RSocketControllerTests {
 
     @Autowired
     private lateinit var service: RSocketService
+    @Autowired
+    private lateinit var jwtService: JwtService
 
     @Autowired
     private lateinit var rSocketRequester: RSocketRequester
 
-    @Value("\${app.user}")
+    @Value("\${berte.user}")
     private lateinit var user: String
 
     private val log = LoggerFactory.getLogger(javaClass)
 
     @Test
     fun `Authenticated request passes and valid response is returned`() {
-        val credentials = UsernamePasswordMetadata(user,"password")
+
+        val credentials = BearerTokenMetadata(jwtService.jwt(user))
 
         val flux = rSocketRequester
             .route("main.${Random.nextInt()}")
