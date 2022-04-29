@@ -4,6 +4,7 @@ import org.apache.commons.codec.binary.Base64
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Mono
+import ru.somarov.auth.request.KeysRequest
 import ru.somarov.auth.request.LoginRequest
 import ru.somarov.auth.response.KeysResponse
 import ru.somarov.auth.response.LoginResponse
@@ -22,7 +23,7 @@ class AuthController(private val authService: AuthService, private val jwtServic
     }
 
     @PostMapping("/jwk")
-    fun jwk(request: LoginRequest): Mono<KeysResponse> {
+    fun jwk(request: KeysRequest): Mono<KeysResponse> {
         return jwtService.public().map { KeysResponse(Base64.encodeBase64String(it.encoded)) }
     }
 }

@@ -1,4 +1,4 @@
-package ru.somarov.berte.auth.config.properties.dto.security
+package ru.somarov.berte.auth.properties.dto.security
 
 import org.springframework.util.ResourceUtils
 import java.io.FileInputStream

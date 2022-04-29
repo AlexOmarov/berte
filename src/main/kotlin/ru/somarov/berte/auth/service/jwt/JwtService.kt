@@ -5,7 +5,7 @@ import com.nimbusds.jose.crypto.RSASSASigner
 import com.nimbusds.jwt.JWTClaimsSet
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
-import ru.somarov.berte.auth.config.properties.AppProps
+import ru.somarov.berte.auth.properties.AppProps
 import java.security.PublicKey
 import java.util.*
 

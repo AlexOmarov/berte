@@ -31,7 +31,7 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.util.pattern.PathPatternParser
 import reactor.core.publisher.Mono
-import ru.somarov.berte.auth.config.properties.AppProps
+import ru.somarov.berte.auth.properties.AppProps
 import ru.somarov.berte.auth.security.DefaultUserDetailsService
 import java.security.SecureRandom
 import java.util.*

@@ -36,9 +36,7 @@ class HessianDecoder: HessianCodecSupport(), HttpMessageDecoder<Any> {
         mimeType: MimeType?,
         hints: MutableMap<String, Any>?
     ): Mono<Any> {
-        return Mono.from(inputStream).handle { dataBuffer: DataBuffer, sink: SynchronousSink<Any> ->
-            sink.next(decode(elementType.toClass(), dataBuffer))
-        }
+        return Mono.from(inputStream).map { decode(elementType.toClass(), it) }
     }
 
     override fun getDecodableMimeTypes(): MutableList<MimeType> {

@@ -22,7 +22,7 @@ class DefaultUserDetailsService : UserDetailsService {
     private lateinit var user: String
 
     override fun loadUserByUsername(username: String?): UserDetails {
-        val auths = mutableListOf(Role("ROLE_USER", OidcIdToken.withTokenValue("efef").build(), OidcUserInfo.builder().build()))
+        val auths = mutableListOf(Role("USER", OidcIdToken.withTokenValue("efef").build(), OidcUserInfo.builder().build()))
         return User(UUID.randomUUID(), username ?: "", passwordEncoder.encode("password"), auths)
     }
 }

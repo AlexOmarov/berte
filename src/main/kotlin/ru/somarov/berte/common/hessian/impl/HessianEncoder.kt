@@ -8,7 +8,6 @@ import org.springframework.http.MediaType
 import org.springframework.http.codec.HttpMessageEncoder
 import org.springframework.util.MimeType
 import reactor.core.publisher.Flux
-import reactor.core.publisher.SynchronousSink
 import ru.somarov.berte.common.constant.Constants.HESSIAN_MIME_TYPE
 import ru.somarov.berte.common.hessian.HessianCodecSupport
 
@@ -30,8 +29,7 @@ class HessianEncoder : HessianCodecSupport(), HttpMessageEncoder<Any> {
         mimeType: MimeType?,
         hints: MutableMap<String, Any>?
     ): Flux<DataBuffer> {
-        return Flux.from(inputStream)
-            .handle { obj: Any, sink: SynchronousSink<DataBuffer> -> sink.next(encode(obj, bufferFactory)) }
+        return Flux.from(inputStream).map { encode(it, bufferFactory) }
     }
 
     override fun encodeValue(

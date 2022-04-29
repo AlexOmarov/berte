@@ -8,11 +8,11 @@ import ru.somarov.berte.common.hessian.HessianCodecSupport
 
 class HessianConverter: HessianCodecSupport(), HttpMessageConverter<Any> {
     override fun canRead(clazz: Class<*>, mediaType: MediaType?): Boolean {
-        return mediaType != null && HESSIAN_MIME_TYPES.contains(mediaType)
+        return mediaType != null && HESSIAN_MEDIA_TYPES.contains(mediaType)
     }
 
     override fun canWrite(clazz: Class<*>, mediaType: MediaType?): Boolean {
-        return mediaType != null && HESSIAN_MIME_TYPES.contains(mediaType)
+        return mediaType != null && HESSIAN_MEDIA_TYPES.contains(mediaType)
     }
 
     override fun getSupportedMediaTypes(): MutableList<MediaType> {
