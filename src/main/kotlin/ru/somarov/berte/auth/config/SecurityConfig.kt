@@ -85,7 +85,7 @@ class SecurityConfig(val props: AppProps) {
             .logout().and()
             // Authz
             .authorizeExchange()
-            .pathMatchers(*props.security.open.map { it }.toTypedArray()).permitAll()
+            .pathMatchers(*props.security.open.map { it }.toTypedArray()).hasRole("PLAYER")
             .pathMatchers(authnPattern).authenticated()
             .and().build()
     }

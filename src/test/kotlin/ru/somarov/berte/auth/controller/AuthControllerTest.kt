@@ -40,7 +40,7 @@ import java.util.*
 @WebFluxTest(properties = ["app.scheduling.enabled=false"], controllers = [AuthController::class])
 @EnableConfigurationProperties(AppProps::class)
 @Import(SecurityConfig::class, RSocketConfig::class)
-@AutoConfigureWebTestClient(timeout = "100000")
+@AutoConfigureWebTestClient
 class AuthControllerTest {
 
     @MockkBean
@@ -63,15 +63,10 @@ class AuthControllerTest {
         every { jwtService.public() } returns Mono.just(appProps.security.jwt.keys.public)
         val token = token("user", appProps)
         val request = KeysRequest("alias", "encoding")
-        webClient = webClient.mutate().codecs {
-            it.customCodecs().register(HessianWriter())
-            it.customCodecs().register(HessianReader())
-        }.build()
-
         val exchange = webClient.post()
             .uri("/auth/jwk")
             .contentType(MediaType.APPLICATION_JSON)
-            .header(AUTH_HEADER, token)
+            .header(AUTH_HEADER, "bearer $token")
             .body(Mono.just(request), KeysRequest::class.java)
             .exchange()
         exchange.expectStatus().is2xxSuccessful
