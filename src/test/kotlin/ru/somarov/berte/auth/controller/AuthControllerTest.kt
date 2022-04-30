@@ -7,20 +7,22 @@ import com.nimbusds.jose.Payload
 import com.nimbusds.jose.crypto.RSASSASigner
 import com.nimbusds.jwt.JWTClaimsSet
 import com.ninjasquad.springmockk.MockkBean
+import io.mockk.every
 import io.mockk.junit5.MockKExtension
-import org.apache.http.io.HttpMessageWriter
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
+import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Mono
 import ru.somarov.auth.request.KeysRequest
+import ru.somarov.berte.auth.config.SecurityConfig
 import ru.somarov.berte.auth.properties.AppProps
 import ru.somarov.berte.auth.service.auth.AuthService
 import ru.somarov.berte.auth.service.jwt.JwtService
@@ -28,13 +30,16 @@ import ru.somarov.berte.common.constant.Constants.AUTH_HEADER
 import ru.somarov.berte.common.constant.Constants.HESSIAN_MIME_TYPE
 import ru.somarov.berte.common.hessian.impl.HessianReader
 import ru.somarov.berte.common.hessian.impl.HessianWriter
+import ru.somarov.berte.game.config.RSocketConfig
 import ru.somarov.berte.game.service.RSocketService
+import java.security.PublicKey
 import java.util.*
 
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension::class, MockKExtension::class)
-@WebFluxTest(properties = ["app.scheduling.enabled=false"])
+@WebFluxTest(properties = ["app.scheduling.enabled=false"], controllers = [AuthController::class])
 @EnableConfigurationProperties(AppProps::class)
+@Import(SecurityConfig::class, RSocketConfig::class)
 @AutoConfigureWebTestClient(timeout = "100000")
 class AuthControllerTest {
 
@@ -55,6 +60,7 @@ class AuthControllerTest {
 
     @Test
     fun `Authenticated request passes and valid response is returned`() {
+        every { jwtService.public() } returns Mono.just(appProps.security.jwt.keys.public)
         val token = token("user", appProps)
         val request = KeysRequest("alias", "encoding")
         webClient = webClient.mutate().codecs {
@@ -62,13 +68,13 @@ class AuthControllerTest {
             it.customCodecs().register(HessianReader())
         }.build()
 
-        webClient.post()
+        val exchange = webClient.post()
             .uri("/auth/jwk")
-            .contentType(MediaType.asMediaType(HESSIAN_MIME_TYPE))
+            .contentType(MediaType.APPLICATION_JSON)
             .header(AUTH_HEADER, token)
             .body(Mono.just(request), KeysRequest::class.java)
             .exchange()
-            .expectStatus().is2xxSuccessful
+        exchange.expectStatus().is2xxSuccessful
     }
 
     private fun token(name: String, props: AppProps): String {
