@@ -92,7 +92,7 @@
 
 		<!-- Security -->
 
-		<!-- Swagger -->
+		<!-- Swagger (ui only) / Springdoc (api - annotations, settings, json/yaml generation, etc) -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-webflux-ui</artifactId>
@@ -101,6 +101,11 @@
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-kotlin</artifactId>
+			<version>${springdoc.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-webflux-core</artifactId>
 			<version>${springdoc.version}</version>
 		</dependency>
 

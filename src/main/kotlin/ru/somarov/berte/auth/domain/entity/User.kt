@@ -24,17 +24,17 @@ class User(
     var password: String,
 
     @Version
-    var version: Short,
+    var version: Short
 ) {
 
     @Transient
     var authorities: MutableCollection<out Role> = mutableListOf()
 
     @CreatedDate
-    var created: OffsetDateTime? = null
+    var createdAt: OffsetDateTime? = null
 
     @LastModifiedDate
-    var modified: OffsetDateTime?  = null
+    var modifiedAt: OffsetDateTime?  = null
 
 
     override fun equals(other: Any?): Boolean {

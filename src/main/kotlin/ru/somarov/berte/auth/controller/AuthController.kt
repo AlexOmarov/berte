@@ -1,6 +1,7 @@
 package ru.somarov.berte.auth.controller
 
 import org.apache.commons.codec.binary.Base64
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -19,14 +20,14 @@ import ru.somarov.berte.auth.service.jwt.JwtService
 class AuthController(private val authService: AuthService, private val jwtService: JwtService) {
 
     @PostMapping("/login")
-    fun login(@RequestBody request: LoginRequest): Mono<LoginResponse> {
+    fun login(@RequestBody request: LoginRequest): Mono<ResponseEntity<LoginResponse>> {
         return authService.login(request.login, request.password, request.codeChallenge, AuthType.valueOf(request.type.name)).map {
-            LoginResponse(it)
+            ResponseEntity.ok(LoginResponse(it))
         }
     }
 
     @PostMapping("/jwk")
-    fun jwk(@RequestBody request: KeysRequest): Mono<KeysResponse> {
-        return jwtService.public().map { KeysResponse(Base64.encodeBase64String(it.encoded)) }
+    fun jwk(@RequestBody request: KeysRequest): Mono<ResponseEntity<KeysResponse>> {
+        return jwtService.public().map { ResponseEntity.ok(KeysResponse(Base64.encodeBase64String(it.encoded))) }
     }
 }
