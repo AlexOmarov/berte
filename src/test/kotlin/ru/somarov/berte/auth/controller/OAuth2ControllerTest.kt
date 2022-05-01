@@ -24,25 +24,21 @@ import reactor.core.publisher.Mono
 import ru.somarov.auth.request.KeysRequest
 import ru.somarov.berte.auth.conf.config.SecurityConfig
 import ru.somarov.berte.auth.conf.properties.AppProps
-import ru.somarov.berte.auth.consumer.controller.AuthController
+import ru.somarov.berte.auth.consumer.controller.OAuth2Controller
 import ru.somarov.berte.auth.domain.service.auth.AuthService
 import ru.somarov.berte.auth.domain.service.jwt.JwtService
 import ru.somarov.berte.common.constant.Constants.AUTH_HEADER
-import ru.somarov.berte.common.constant.Constants.HESSIAN_MIME_TYPE
-import ru.somarov.berte.common.hessian.impl.HessianReader
-import ru.somarov.berte.common.hessian.impl.HessianWriter
 import ru.somarov.berte.game.config.RSocketConfig
 import ru.somarov.berte.game.service.RSocketService
-import java.security.PublicKey
 import java.util.*
 
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension::class, MockKExtension::class)
-@WebFluxTest(properties = ["app.scheduling.enabled=false"], controllers = [AuthController::class])
+@WebFluxTest(properties = ["app.scheduling.enabled=false"], controllers = [OAuth2Controller::class])
 @EnableConfigurationProperties(AppProps::class)
 @Import(SecurityConfig::class, RSocketConfig::class)
 @AutoConfigureWebTestClient
-class AuthControllerTest {
+class OAuth2ControllerTest {
 
     @MockkBean
     private lateinit var authService: AuthService

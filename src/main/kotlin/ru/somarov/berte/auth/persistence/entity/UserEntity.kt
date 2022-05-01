@@ -23,9 +23,6 @@ class UserEntity(
     @NotBlank
     var password: String,
 
-    @Version
-    var version: Short,
-
     var accountNonExpired: Boolean,
     var accountNonLocked: Boolean,
     var credentialsNonExpired: Boolean,

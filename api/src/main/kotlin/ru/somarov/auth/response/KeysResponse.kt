@@ -1,3 +1,5 @@
 package ru.somarov.auth.response
 
-data class KeysResponse(val key: String)
+import ru.somarov.auth.dto.BerteKey
+
+data class KeysResponse(val keys: List<BerteKey>)
