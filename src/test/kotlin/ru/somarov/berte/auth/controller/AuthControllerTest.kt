@@ -22,10 +22,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Mono
 import ru.somarov.auth.request.KeysRequest
-import ru.somarov.berte.auth.config.SecurityConfig
-import ru.somarov.berte.auth.properties.AppProps
-import ru.somarov.berte.auth.service.auth.AuthService
-import ru.somarov.berte.auth.service.jwt.JwtService
+import ru.somarov.berte.auth.conf.config.SecurityConfig
+import ru.somarov.berte.auth.conf.properties.AppProps
+import ru.somarov.berte.auth.consumer.controller.AuthController
+import ru.somarov.berte.auth.domain.service.auth.AuthService
+import ru.somarov.berte.auth.domain.service.jwt.JwtService
 import ru.somarov.berte.common.constant.Constants.AUTH_HEADER
 import ru.somarov.berte.common.constant.Constants.HESSIAN_MIME_TYPE
 import ru.somarov.berte.common.hessian.impl.HessianReader

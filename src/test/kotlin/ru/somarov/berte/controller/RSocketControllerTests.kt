@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.messaging.rsocket.RSocketRequester
 import org.springframework.security.rsocket.metadata.BearerTokenMetadata
@@ -16,7 +17,8 @@ import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import reactor.test.StepVerifier
-import ru.somarov.berte.auth.service.jwt.JwtService
+import ru.somarov.berte.auth.conf.properties.AppProps
+import ru.somarov.berte.auth.domain.service.jwt.JwtService
 import ru.somarov.berte.common.constant.Constants.RSOCKET_AUTHENTICATION_MIME_TYPE
 import ru.somarov.berte.game.service.RSocketService
 import ru.somarov.game.dto.SimpleMessage
@@ -28,6 +30,7 @@ import kotlin.random.Random
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension::class)
 @Testcontainers
+@EnableConfigurationProperties(AppProps::class)
 @SpringBootTest(properties = ["app.scheduling.enabled=false"])
 class RSocketControllerTests {
 

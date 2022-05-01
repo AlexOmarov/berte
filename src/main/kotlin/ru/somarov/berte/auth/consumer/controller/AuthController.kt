@@ -1,0 +1,33 @@
+package ru.somarov.berte.auth.consumer.controller
+
+import org.apache.commons.codec.binary.Base64
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+import reactor.core.publisher.Mono
+import ru.somarov.auth.request.KeysRequest
+import ru.somarov.auth.request.LoginRequest
+import ru.somarov.auth.response.KeysResponse
+import ru.somarov.auth.response.LoginResponse
+import ru.somarov.berte.auth.conf.constants.AuthType
+import ru.somarov.berte.auth.domain.service.auth.AuthService
+import ru.somarov.berte.auth.domain.service.jwt.JwtService
+
+@RestController
+@RequestMapping("/auth")
+class AuthController(private val authService: AuthService, private val jwtService: JwtService) {
+
+    @PostMapping("/login")
+    fun login(@RequestBody request: LoginRequest): Mono<ResponseEntity<LoginResponse>> {
+        return authService.login(request.login, request.password, request.codeChallenge, AuthType.valueOf(request.type.name)).map {
+            ResponseEntity.ok(LoginResponse(it))
+        }
+    }
+
+    @PostMapping("/jwk")
+    fun jwk(@RequestBody request: KeysRequest): Mono<ResponseEntity<KeysResponse>> {
+        return jwtService.public().map { ResponseEntity.ok(KeysResponse(Base64.encodeBase64String(it.encoded))) }
+    }
+}
