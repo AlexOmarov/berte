@@ -17,19 +17,19 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.security.access.SecurityConfig
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Mono
-import ru.somarov.auth.request.KeysRequest
-import ru.somarov.berte.auth.conf.config.SecurityConfig
-import ru.somarov.berte.auth.conf.properties.AppProps
-import ru.somarov.berte.auth.consumer.controller.OAuth2Controller
-import ru.somarov.berte.auth.domain.service.auth.AuthService
-import ru.somarov.berte.auth.domain.service.jwt.JwtService
-import ru.somarov.berte.common.constant.Constants.AUTH_HEADER
-import ru.somarov.berte.game.config.RSocketConfig
-import ru.somarov.berte.game.service.RSocketService
+import ru.somarov.berte.conf.config.RSocketConfig
+import ru.somarov.berte.conf.constants.Constants.AUTH_HEADER
+import ru.somarov.berte.conf.properties.AppProps
+import ru.somarov.berte.consumer.controller.OAuth2Controller
+import ru.somarov.berte.domain.service.RSocketService
+import ru.somarov.berte.domain.service.auth.AuthService
+import ru.somarov.berte.domain.service.jwt.JwtService
+import ru.somarov.berte_api.request.KeysRequest
 import java.util.*
 
 @ActiveProfiles("test")

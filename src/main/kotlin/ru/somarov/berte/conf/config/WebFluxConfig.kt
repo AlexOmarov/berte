@@ -1,0 +1,21 @@
+package ru.somarov.berte.conf.config
+
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan
+import org.springframework.boot.web.codec.CodecCustomizer
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.web.reactive.config.WebFluxConfigurer
+import ru.somarov.berte.domain.hessian.impl.HessianReader
+import ru.somarov.berte.domain.hessian.impl.HessianWriter
+
+@Configuration
+@ConfigurationPropertiesScan
+class WebFluxConfig: WebFluxConfigurer {
+    @Bean
+    fun hessianCodec(): CodecCustomizer {
+        return CodecCustomizer {
+            it.customCodecs().register(HessianWriter())
+            it.customCodecs().register(HessianReader())
+        }
+    }
+}

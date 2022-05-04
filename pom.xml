@@ -61,7 +61,7 @@
 		<!-- Logback -->
 		<dependency>
 			<groupId>ru.somarov</groupId>
-			<artifactId>api</artifactId>
+			<artifactId>berte_api</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 
@@ -319,7 +319,7 @@
 						<configuration>
 							<sourceDirs>
 								<source>src/main/kotlin</source>
-								<source>api/src/main/kotlin</source>
+								<source>berte_api/src/main/kotlin</source>
 							</sourceDirs>
 						</configuration>
 					</execution>

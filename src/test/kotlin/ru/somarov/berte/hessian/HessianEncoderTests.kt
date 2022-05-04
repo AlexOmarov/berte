@@ -1,14 +1,12 @@
 package ru.somarov.berte.hessian
 
 import com.caucho.hessian.io.HessianSerializerInput
-import com.caucho.hessian.io.HessianSerializerOutput
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.core.io.buffer.DataBufferUtils
 import org.springframework.core.io.buffer.DefaultDataBufferFactory
-import ru.somarov.berte.common.hessian.impl.HessianDecoder
-import ru.somarov.berte.common.hessian.impl.HessianEncoder
-import ru.somarov.game.dto.SimpleMessage
+import ru.somarov.berte.domain.hessian.impl.HessianEncoder
+import ru.somarov.berte_api.SimpleMessage
 import java.util.*
 
 class HessianEncoderTests {
