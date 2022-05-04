@@ -1,4 +1,4 @@
-package ru.somarov.berte.domain.hessian.impl
+package ru.somarov.berte.core.hessian.impl
 
 import org.reactivestreams.Publisher
 import org.springframework.core.ResolvableType
@@ -6,7 +6,7 @@ import org.springframework.http.MediaType
 import org.springframework.http.ReactiveHttpOutputMessage
 import org.springframework.http.codec.HttpMessageWriter
 import reactor.core.publisher.Mono
-import ru.somarov.berte.domain.hessian.HessianCodecSupport
+import ru.somarov.berte.core.hessian.HessianCodecSupport
 
 class HessianWriter: HessianCodecSupport(), HttpMessageWriter<Any> {
     override fun getWritableMediaTypes(): MutableList<MediaType> {

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 // O(n) - память
 class QuickSorter {
 
-    @Test
+    //@Test
     fun `Quick sort`() {
         val array = intArrayOf(5, 3, 7, 9, 9, 0, 2, 2, 7, 9, 5, 3, 7)
         sort(array, 0, array.size - 1)

@@ -1,5 +1,3 @@
 package ru.somarov.berte_api.request
 
-import ru.somarov.berte_api.dto.Revocation
-
-data class RevokeRequest(val revocations: List<Revocation>)
+data class RevokeRequest(val access: String?, val refresh: String?, val rememberMe: String?, val id: String?)

@@ -17,53 +17,37 @@ import ru.somarov.berte_api.response.*
 class OAuth2Controller(private val authService: AuthBusinessService) {
 
     @PostMapping("/code", consumes = ["application/json"], produces = ["application/json"])
-    fun code(
-        @RequestBody request: Oauth2CodeRequest
-    ): Mono<ResponseEntity<Oauth2CodeResponse>> {
+    fun code(@RequestBody request: Oauth2CodeRequest): Mono<ResponseEntity<Oauth2CodeResponse>> {
         return authService.login(
-            request.login,
-            request.secret,
-            request.codeChallenge,
-            Provider.valueOf(request.provider.name)
-        ).map {
+            request.login, request.secret, request.codeChallenge, Provider.valueOf(request.provider.name), request.grantType.name).map {
             ResponseEntity.ok(Oauth2CodeResponse(it))
         }
     }
 
-    @PostMapping("/token")
-    fun token(
-        @RequestBody request: TokenRequest
-    ): Mono<ResponseEntity<TokenResponse>> {
+    @PostMapping("/token", consumes = ["application/json"], produces = ["application/json"])
+    fun token(@RequestBody request: TokenRequest): Mono<ResponseEntity<TokenResponse>> {
         return authService.token(request.code, request.clientId, request.codeVerifier).map {
             ResponseEntity.ok(TokenResponse(it.access, it.refresh, it.rememberMe, it.id))
         }
     }
 
-    @PostMapping("/logout")
-    fun logout(
-        @RequestBody request: LogoutRequest,
-        @AuthenticationPrincipal user: User
-    ): Mono<ResponseEntity<LogoutResponse>> {
+    @PostMapping("/logout", consumes = ["application/json"], produces = ["application/json"])
+    fun logout(@RequestBody request: LogoutRequest, @AuthenticationPrincipal user: User): Mono<ResponseEntity<LogoutResponse>> {
         return authService.logout(request.id, request.access, request.refresh, request.rememberMe).map {
             ResponseEntity.ok(LogoutResponse("ok"))
         }
     }
 
-    @PostMapping("/token/revoke")
-    fun revoke(
-        @RequestBody request: RevokeRequest,
-        @AuthenticationPrincipal user: User
-    ): Mono<ResponseEntity<RevokeResponse>> {
-        return authService.revoke(request.revocations).map {
+    @PostMapping("/token/revoke", consumes = ["application/json"], produces = ["application/json"])
+    fun revoke(@RequestBody request: RevokeRequest, @AuthenticationPrincipal user: User): Mono<ResponseEntity<RevokeResponse>> {
+        return authService.revoke(request.access, request.refresh, request.rememberMe, request.id).map {
             ResponseEntity.ok(RevokeResponse("ok"))
         }
     }
 
-    @GetMapping("/jwks")
-    fun jwks(
-        @RequestBody request: KeysRequest
-    ): Mono<ResponseEntity<KeysResponse>> {
-        return authService.getPublicJwk().map {
+    @GetMapping("/jwks", consumes = ["application/json"], produces = ["application/json"])
+    fun jwks(@RequestBody request: KeysRequest): Mono<ResponseEntity<KeysResponse>> {
+        return authService.getPublicJwk(request.alias, request.encoding).map {
             ResponseEntity.ok(KeysResponse(listOf(BerteKey(BerteKeyType.JWS, it.kty, it.use, it.kid, it.n))))
         }
     }

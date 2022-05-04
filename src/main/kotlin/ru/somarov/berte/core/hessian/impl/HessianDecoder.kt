@@ -1,4 +1,4 @@
-package ru.somarov.berte.domain.hessian.impl
+package ru.somarov.berte.core.hessian.impl
 
 import org.reactivestreams.Publisher
 import org.springframework.core.ResolvableType
@@ -11,7 +11,7 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.publisher.SynchronousSink
 import ru.somarov.berte.conf.constants.Constants.HESSIAN_MIME_TYPE
-import ru.somarov.berte.domain.hessian.HessianCodecSupport
+import ru.somarov.berte.core.hessian.HessianCodecSupport
 
 class HessianDecoder: HessianCodecSupport(), HttpMessageDecoder<Any> {
 

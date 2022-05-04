@@ -1,4 +1,4 @@
-package ru.somarov.berte.domain.security
+package ru.somarov.berte.core.security
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value

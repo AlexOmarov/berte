@@ -32,7 +32,7 @@ import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.util.pattern.PathPatternParser
 import reactor.core.publisher.Mono
 import ru.somarov.berte.conf.properties.AppProps
-import ru.somarov.berte.domain.security.DefaultUserDetailsService
+import ru.somarov.berte.core.security.DefaultUserDetailsService
 import ru.somarov.berte.persistence.PersistenceFacade
 import java.security.SecureRandom
 import java.util.*

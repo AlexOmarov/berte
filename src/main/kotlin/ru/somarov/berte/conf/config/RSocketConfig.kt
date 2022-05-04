@@ -15,8 +15,8 @@ import org.springframework.security.rsocket.core.PayloadSocketAcceptorIntercepto
 import org.springframework.security.rsocket.metadata.BearerTokenAuthenticationEncoder
 import reactor.util.retry.Retry
 import ru.somarov.berte.conf.constants.Constants.HESSIAN_MIME_TYPE
-import ru.somarov.berte.domain.hessian.impl.HessianDecoder
-import ru.somarov.berte.domain.hessian.impl.HessianEncoder
+import ru.somarov.berte.core.hessian.impl.HessianDecoder
+import ru.somarov.berte.core.hessian.impl.HessianEncoder
 import java.net.URI
 import java.time.Duration
 

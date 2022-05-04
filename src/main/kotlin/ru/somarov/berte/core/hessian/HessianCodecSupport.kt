@@ -1,4 +1,4 @@
-package ru.somarov.berte.domain.hessian
+package ru.somarov.berte.core.hessian
 
 import com.caucho.hessian.io.HessianSerializerInput
 import com.caucho.hessian.io.HessianSerializerOutput

@@ -1,4 +1,4 @@
-package ru.somarov.berte.domain.hessian.impl
+package ru.somarov.berte.core.hessian.impl
 
 import org.springframework.core.ResolvableType
 import org.springframework.http.MediaType
@@ -6,7 +6,7 @@ import org.springframework.http.ReactiveHttpInputMessage
 import org.springframework.http.codec.HttpMessageReader
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import ru.somarov.berte.domain.hessian.HessianCodecSupport
+import ru.somarov.berte.core.hessian.HessianCodecSupport
 
 class HessianReader: HessianCodecSupport(), HttpMessageReader<Any> {
     override fun getReadableMediaTypes(): MutableList<MediaType> {

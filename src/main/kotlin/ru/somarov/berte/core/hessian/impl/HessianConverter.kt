@@ -1,10 +1,10 @@
-package ru.somarov.berte.domain.hessian.impl
+package ru.somarov.berte.core.hessian.impl
 
 import org.springframework.http.HttpInputMessage
 import org.springframework.http.HttpOutputMessage
 import org.springframework.http.MediaType
 import org.springframework.http.converter.HttpMessageConverter
-import ru.somarov.berte.domain.hessian.HessianCodecSupport
+import ru.somarov.berte.core.hessian.HessianCodecSupport
 
 class HessianConverter: HessianCodecSupport(), HttpMessageConverter<Any> {
     override fun canRead(clazz: Class<*>, mediaType: MediaType?): Boolean {
