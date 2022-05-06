@@ -9,12 +9,10 @@ import com.nimbusds.jwt.JWTClaimsSet
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.security.access.SecurityConfig
@@ -22,10 +20,8 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Mono
-import ru.somarov.berte.conf.config.RSocketConfig
 import ru.somarov.berte.conf.constants.Constants.AUTH_HEADER
 import ru.somarov.berte.conf.properties.AppProps
-import ru.somarov.berte.consumer.controller.OAuth2Controller
 import ru.somarov.berte.domain.service.auth.AuthService
 import ru.somarov.berte.domain.service.jwt.JwtService
 import ru.somarov.berte_api.request.KeysRequest
@@ -35,7 +31,7 @@ import java.util.*
 @ExtendWith(SpringExtension::class, MockKExtension::class)
 //@WebFluxTest(properties = ["app.scheduling.enabled=false"], controllers = [OAuth2Controller::class])
 @EnableConfigurationProperties(AppProps::class)
-@Import(SecurityConfig::class, RSocketConfig::class)
+@Import(SecurityConfig::class)
 @AutoConfigureWebTestClient
 class OAuth2ControllerTest {
 

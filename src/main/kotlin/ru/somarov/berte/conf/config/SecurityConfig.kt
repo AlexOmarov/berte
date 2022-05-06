@@ -10,7 +10,6 @@ import org.springframework.core.convert.converter.Converter
 import org.springframework.security.authentication.*
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity
-import org.springframework.security.config.annotation.rsocket.EnableRSocketSecurity
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.core.GrantedAuthority
@@ -47,48 +46,57 @@ import java.util.*
  */
 
 @Configuration
-@EnableRSocketSecurity
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
 class SecurityConfig(val props: AppProps) {
 
-    private val corsPattern = "/**"
-    private val authnPattern = "/**"
+    @Bean
+    fun securityWebFilterChain(http: ServerHttpSecurity, authenticationManagerResolver: ReactiveAuthenticationManagerResolver<ServerWebExchange>): SecurityWebFilterChain {
+        return http.csrf().disable() // CSRF
+            .cors().configurationSource( // CORS
+                UrlBasedCorsConfigurationSource(PathPatternParser()).also { source ->
+                    source.setCorsConfigurations(
+                    Collections.singletonMap("/**", CorsConfiguration().also {
+                        val cors = props.security.cors
+                        it.allowedOrigins = cors.origins; it.allowedMethods = cors.methods
+                        it.allowedHeaders = cors.headers; it.exposedHeaders = cors.exposedHeaders
+                        it.allowCredentials = cors.allowCreds; it.maxAge = cors.age })) })
+            .and() // Authn
+            .httpBasic().disable()
+            .formLogin().disable()
+            .oauth2ResourceServer().authenticationManagerResolver(authenticationManagerResolver).bearerTokenConverter(authenticationConverter()).and()
+            .logout()
+            .and() // Authz
+            .authorizeExchange()
+            .pathMatchers(*props.security.open.map { it }.toTypedArray()).permitAll()
+            .pathMatchers("/**").authenticated()
+            .and().build()
+    }
 
+    // Only provider used in filters
+    @Bean
+    fun jwtProvider(authoritiesConverter: Converter<Jwt, Collection<GrantedAuthority>>, validators: List<OAuth2TokenValidator<Jwt>>): JwtAuthenticationProvider {
+        val processor = DefaultJWTProcessor<SecurityContext>()
+        processor.jwsKeySelector = SingleKeyJWSKeySelector(JWSAlgorithm.RS512, props.security.jwt.keys.public)
+        val decoder = NimbusJwtDecoder(processor)
+        val provider = JwtAuthenticationProvider(decoder)
+        val converter = JwtAuthenticationConverter()
+        decoder.setJwtValidator(DelegatingOAuth2TokenValidator(validators))
+        converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter)
+        provider.setJwtAuthenticationConverter(converter)
+        return provider
+    }
+
+    // Provider used in login endpoint
+    @Bean
+    fun daoProvider(persistenceFacade: PersistenceFacade): DaoAuthenticationProvider {
+        return DaoAuthenticationProvider().also { it.setUserDetailsService(DefaultUserDetailsService(persistenceFacade)) }
+    }
+
+    // Auth managers, Password encoders, auth converters for filter
     @Bean
     fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder(11, SecureRandom())
-    }
-
-    @Bean
-    fun securityWebFilterChain(http: ServerHttpSecurity, authenticationManagerResolver: ReactiveAuthenticationManagerResolver<ServerWebExchange>): SecurityWebFilterChain {
-        return http
-            // CSRF
-            .csrf().disable()
-            // CORS
-            .cors().configurationSource(
-                UrlBasedCorsConfigurationSource(PathPatternParser()).also { source ->
-                    source.setCorsConfigurations(
-                    Collections.singletonMap(corsPattern, CorsConfiguration().also {
-                        val cors = props.security.cors
-                        it.allowedOrigins = cors.origins
-                        it.allowedMethods = cors.methods
-                        it.allowedHeaders = cors.headers
-                        it.exposedHeaders = cors.exposedHeaders
-                        it.allowCredentials = cors.allowCreds
-                        it.maxAge = cors.age
-                    })
-                ) }
-            ).and()
-            // Authn
-            .httpBasic().disable()
-            .formLogin().disable().oauth2ResourceServer().authenticationManagerResolver(authenticationManagerResolver).bearerTokenConverter(authenticationConverter()).and()
-            .logout().and()
-            // Authz
-            .authorizeExchange()
-            .pathMatchers(*props.security.open.map { it }.toTypedArray()).hasRole("PLAYER")
-            .pathMatchers(authnPattern).authenticated()
-            .and().build()
     }
 
     @Bean
@@ -111,29 +119,9 @@ class SecurityConfig(val props: AppProps) {
         return ServerBearerTokenAuthenticationConverter()
     }
 
-    // Only provider used in filters
-    @Bean
-    fun jwtProvider(authoritiesConverter: Converter<Jwt, Collection<GrantedAuthority>>, validators: List<OAuth2TokenValidator<Jwt>>): JwtAuthenticationProvider {
-        val processor = DefaultJWTProcessor<SecurityContext>()
-        processor.jwsKeySelector = SingleKeyJWSKeySelector(JWSAlgorithm.RS512, props.security.jwt.keys.public)
-        val decoder = NimbusJwtDecoder(processor)
-        val provider = JwtAuthenticationProvider(decoder)
-        val converter = JwtAuthenticationConverter()
-        decoder.setJwtValidator(DelegatingOAuth2TokenValidator(validators))
-        converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter)
-        provider.setJwtAuthenticationConverter(converter)
-        return provider
-    }
-
     @Bean
     fun authoritiesConverter(): JwtGrantedAuthoritiesConverter {
         return JwtGrantedAuthoritiesConverter().also { it.setAuthorityPrefix("ROLE_") }
-    }
-
-    // Provider used in login endpoint
-    @Bean
-    fun daoProvider(persistenceFacade: PersistenceFacade): DaoAuthenticationProvider {
-        return DaoAuthenticationProvider().also { it.setUserDetailsService(DefaultUserDetailsService(persistenceFacade)) }
     }
 
 }

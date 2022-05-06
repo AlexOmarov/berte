@@ -1,3 +1,5 @@
 package ru.somarov.berte.business.dto
 
-data class AuthorizationResult(val access: String, val refresh: String, val rememberMe: String?, val id: String?)
+import ru.somarov.berte.domain.dto.AuthorizationStatus
+
+data class AuthorizationResult(val status: AuthorizationStatus, val access: String, val refresh: String, val rememberMe: String?, val id: String?)

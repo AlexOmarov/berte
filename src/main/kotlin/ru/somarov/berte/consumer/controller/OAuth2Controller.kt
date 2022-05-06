@@ -7,10 +7,11 @@ import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Mono
 import ru.somarov.berte.business.service.AuthBusinessService
 import ru.somarov.berte_api.constant.BerteKeyType
-import ru.somarov.berte_api.constant.Provider
 import ru.somarov.berte_api.dto.BerteKey
 import ru.somarov.berte_api.request.*
 import ru.somarov.berte_api.response.*
+import ru.somarov.berte_api.standard.ResponseInfo
+import ru.somarov.berte_api.standard.ResultCode
 
 @RestController
 @RequestMapping("/oauth2")
@@ -18,16 +19,15 @@ class OAuth2Controller(private val authService: AuthBusinessService) {
 
     @PostMapping("/code", consumes = ["application/json"], produces = ["application/json"])
     fun code(@RequestBody request: Oauth2CodeRequest): Mono<ResponseEntity<Oauth2CodeResponse>> {
-        return authService.login(
-            request.login, request.secret, request.codeChallenge, Provider.valueOf(request.provider.name), request.grantType.name).map {
-            ResponseEntity.ok(Oauth2CodeResponse(it))
-        }
+        return authService.login(request.login, request.secret, request.codeChallenge, request.provider, request.clientId)
+            .map { ResponseEntity.ok(Oauth2CodeResponse(it)) }
     }
 
     @PostMapping("/token", consumes = ["application/json"], produces = ["application/json"])
     fun token(@RequestBody request: TokenRequest): Mono<ResponseEntity<TokenResponse>> {
         return authService.token(request.code, request.clientId, request.codeVerifier).map {
-            ResponseEntity.ok(TokenResponse(it.access, it.refresh, it.rememberMe, it.id))
+            it?.also { ResponseEntity.ok(TokenResponse(it.access, it.refresh, it.rememberMe, it.id)) }
+                ?: ResponseEntity.ok(TokenResponse(null, null, null, null, ResponseInfo.get(ResultCode.OK)))
         }
     }
 

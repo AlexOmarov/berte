@@ -11,8 +11,14 @@ import ru.somarov.berte_api.constant.Provider
 @Service
 class AuthBusinessService(private val authService: AuthService, private val jwtService: JwtService) {
 
-    fun login(login: String?, password: String?, codeChallenge: String, provider: Provider, type: String): Mono<String> {
-        return authService.login(login as String, password as String, codeChallenge, provider, type).map {
+    fun login(
+        login: String,
+        password: String,
+        codeChallenge: String,
+        provider: Provider,
+        clientId: String
+    ): Mono<String> {
+        return authService.login(login, password, codeChallenge, provider, clientId).map {
             it.code
         }
     }
@@ -21,8 +27,8 @@ class AuthBusinessService(private val authService: AuthService, private val jwtS
         TODO("Not yet implemented")
     }
 
-    fun token(code: String, clientId: String, codeVerifier: String): Mono<AuthorizationResult> {
-        return Mono.just(AuthorizationResult("","","",""))
+    fun token(code: String, clientId: String, verifier: String): Mono<AuthorizationResult> {
+        return authService.getTokens(code, clientId, verifier)
     }
 
     fun revoke(revocations: String?, refresh: String?, rememberMe: String?, id: String?): Mono<Void> {

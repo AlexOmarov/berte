@@ -2,10 +2,9 @@ package ru.somarov.berte.hessian
 
 import com.caucho.hessian.io.HessianSerializerOutput
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Test
 import org.springframework.core.io.buffer.DefaultDataBufferFactory
 import ru.somarov.berte.core.hessian.impl.HessianDecoder
-import ru.somarov.berte_api.SimpleMessage
+import ru.somarov.berte_api.message.SimpleMessage
 import java.util.*
 
 class HessianDecoderTests {
