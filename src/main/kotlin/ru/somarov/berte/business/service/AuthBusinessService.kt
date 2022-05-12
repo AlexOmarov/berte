@@ -4,27 +4,26 @@ import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 import ru.somarov.berte.business.dto.AuthorizationResult
 import ru.somarov.berte.business.dto.BertePublicKey
+import ru.somarov.berte.domain.service.TokenService
 import ru.somarov.berte.domain.service.auth.AuthService
-import ru.somarov.berte.domain.service.jwt.JwtService
 import ru.somarov.berte_api.constant.Provider
 
 @Service
-class AuthBusinessService(private val authService: AuthService, private val jwtService: JwtService) {
+class AuthBusinessService(private val authService: AuthService, private val tokenService: TokenService) {
 
-    fun login(
+    fun authorize(
         login: String,
         password: String,
         codeChallenge: String,
         provider: Provider,
-        clientId: String
+        clientId: String,
+        oidc: Boolean
     ): Mono<String> {
-        return authService.login(login, password, codeChallenge, provider, clientId).map {
-            it.code
-        }
+        return authService.login(login, password, codeChallenge, provider, clientId, oidc).map { it.code }
     }
 
     fun getPublicJwk(alias: String, encoding: String): Mono<BertePublicKey> {
-        TODO("Not yet implemented")
+        return tokenService.getKey(alias, encoding)
     }
 
     fun token(code: String, clientId: String, verifier: String): Mono<AuthorizationResult> {

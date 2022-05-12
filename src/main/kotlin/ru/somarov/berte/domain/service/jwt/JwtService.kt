@@ -9,22 +9,23 @@ import com.nimbusds.jwt.JWTClaimsSet
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 import ru.somarov.berte.conf.properties.AppProps
-import ru.somarov.berte.persistence.PersistenceFacade
 import java.security.PublicKey
+import java.time.Duration
 import java.util.*
 
-
 @Service
-class JwtService(private val props: AppProps, persistence: PersistenceFacade) {
+class JwtService(private val props: AppProps) {
 
-    fun jwt(name: String): String {
+    fun jwt(name: String, duration: Duration, oidc: Boolean): String {
         val claims = JWTClaimsSet.Builder()
             .issueTime(Date())
-            .expirationTime(Date(Date().time + props.security.jwt.accessExpiration.toMillis()))
+            .expirationTime(Date(Date().time + duration.toMillis()))
             .subject(name)
             .claim("scope", "PLAYER")
-            .build()
-        val payload = Payload(claims.toJSONObject())
+
+        if (oidc) claims.claim("id", "sfg")
+
+        val payload = Payload(claims.build().toJSONObject())
         val header = JWSHeader(JWSAlgorithm.RS512)
         val token = JWSObject(header, payload)
         token.sign(RSASSASigner(props.security.jwt.keys.private))

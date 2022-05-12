@@ -10,24 +10,21 @@ import ru.somarov.berte_api.constant.BerteKeyType
 import ru.somarov.berte_api.dto.BerteKey
 import ru.somarov.berte_api.request.*
 import ru.somarov.berte_api.response.*
-import ru.somarov.berte_api.standard.ResponseInfo
-import ru.somarov.berte_api.standard.ResultCode
 
 @RestController
 @RequestMapping("/oauth2")
 class OAuth2Controller(private val authService: AuthBusinessService) {
 
-    @PostMapping("/code", consumes = ["application/json"], produces = ["application/json"])
-    fun code(@RequestBody request: Oauth2CodeRequest): Mono<ResponseEntity<Oauth2CodeResponse>> {
-        return authService.login(request.login, request.secret, request.codeChallenge, request.provider, request.clientId)
+    @PostMapping("/authorize", consumes = ["application/json"], produces = ["application/json"])
+    fun authorize(@RequestBody request: Oauth2CodeRequest): Mono<ResponseEntity<Oauth2CodeResponse>> {
+        return authService.authorize(request.login, request.secret, request.codeChallenge, request.provider, request.clientId, true)
             .map { ResponseEntity.ok(Oauth2CodeResponse(it)) }
     }
 
     @PostMapping("/token", consumes = ["application/json"], produces = ["application/json"])
     fun token(@RequestBody request: TokenRequest): Mono<ResponseEntity<TokenResponse>> {
         return authService.token(request.code, request.clientId, request.codeVerifier).map {
-            it?.also { ResponseEntity.ok(TokenResponse(it.access, it.refresh, it.rememberMe, it.id)) }
-                ?: ResponseEntity.ok(TokenResponse(null, null, null, null, ResponseInfo.get(ResultCode.OK)))
+            ResponseEntity.ok(TokenResponse(it.access, it.refresh, it.rememberMe, it.id))
         }
     }
 
