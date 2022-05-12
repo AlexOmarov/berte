@@ -1,4 +1,4 @@
-package ru.somarov.berte.domain.service.auth
+package ru.somarov.berte.domain.service
 
 import org.springframework.cache.CacheManager
 import org.springframework.security.authentication.ReactiveAuthenticationManager
@@ -9,7 +9,6 @@ import reactor.core.publisher.Mono
 import ru.somarov.berte.business.dto.AuthorizationResult
 import ru.somarov.berte.domain.dto.AuthorizationCodeInfo
 import ru.somarov.berte.domain.dto.AuthorizationStatus
-import ru.somarov.berte.domain.service.TokenService
 import ru.somarov.berte_api.constant.Provider
 import java.util.*
 import kotlin.collections.HashMap

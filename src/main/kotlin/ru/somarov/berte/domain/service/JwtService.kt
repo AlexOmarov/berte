@@ -1,4 +1,4 @@
-package ru.somarov.berte.domain.service.jwt
+package ru.somarov.berte.domain.service
 
 import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.JWSHeader

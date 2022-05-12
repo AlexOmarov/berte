@@ -5,7 +5,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Mono
-import ru.somarov.berte.business.service.AuthBusinessService
+import ru.somarov.berte.business.service.BusinessService
 import ru.somarov.berte_api.constant.BerteKeyType
 import ru.somarov.berte_api.dto.BerteKey
 import ru.somarov.berte_api.request.*
@@ -13,7 +13,7 @@ import ru.somarov.berte_api.response.*
 
 @RestController
 @RequestMapping("/oauth2")
-class OAuth2Controller(private val authService: AuthBusinessService) {
+class OAuth2Controller(private val authService: BusinessService) {
 
     @PostMapping("/authorize", consumes = ["application/json"], produces = ["application/json"])
     fun authorize(@RequestBody request: Oauth2CodeRequest): Mono<ResponseEntity<Oauth2CodeResponse>> {

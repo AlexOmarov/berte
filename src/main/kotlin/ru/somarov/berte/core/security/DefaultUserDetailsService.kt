@@ -16,9 +16,6 @@ class DefaultUserDetailsService(persistence: PersistenceFacade) : UserDetailsSer
     @Autowired
     private lateinit var passwordEncoder: PasswordEncoder
 
-    @Value("\${berte.user}")
-    private lateinit var user: String
-
     override fun loadUserByUsername(username: String?): UserDetails {
         val auths = mutableListOf(SimpleGrantedAuthority( "PLAYER"))
         return User(username ?: "def", passwordEncoder.encode("password"), auths)

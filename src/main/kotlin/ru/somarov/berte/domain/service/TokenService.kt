@@ -2,11 +2,10 @@ package ru.somarov.berte.domain.service
 
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
-import ru.somarov.berte.business.dto.BertePublicKey
 import ru.somarov.berte.conf.properties.AppProps
 import ru.somarov.berte.domain.dto.AuthorizedTokenHolder
-import ru.somarov.berte.domain.service.jwt.JwtService
 import ru.somarov.berte.persistence.PersistenceFacade
+import java.security.PublicKey
 import java.util.*
 
 @Service
@@ -24,9 +23,7 @@ class TokenService(
         return Mono.just(AuthorizedTokenHolder(access, refresh, null, id))
     }
 
-    fun getKey(alias: String, encoding: String): Mono<BertePublicKey> {
-        return jwtService.public().map {
-            BertePublicKey("", "", "", it.toString())
-        }
+    fun getKey(alias: String, encoding: String): Mono<PublicKey> {
+        return jwtService.public()
     }
 }

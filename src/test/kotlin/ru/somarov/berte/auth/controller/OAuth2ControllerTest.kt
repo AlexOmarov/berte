@@ -22,8 +22,8 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Mono
 import ru.somarov.berte.conf.constants.Constants.AUTH_HEADER
 import ru.somarov.berte.conf.properties.AppProps
-import ru.somarov.berte.domain.service.auth.AuthService
-import ru.somarov.berte.domain.service.jwt.JwtService
+import ru.somarov.berte.domain.service.AuthService
+import ru.somarov.berte.domain.service.JwtService
 import ru.somarov.berte_api.request.KeysRequest
 import java.util.*
 

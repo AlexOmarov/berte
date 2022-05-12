@@ -5,25 +5,22 @@ import reactor.core.publisher.Mono
 import ru.somarov.berte.business.dto.AuthorizationResult
 import ru.somarov.berte.business.dto.BertePublicKey
 import ru.somarov.berte.domain.service.TokenService
-import ru.somarov.berte.domain.service.auth.AuthService
+import ru.somarov.berte.domain.service.AuthService
 import ru.somarov.berte_api.constant.Provider
 
 @Service
-class AuthBusinessService(private val authService: AuthService, private val tokenService: TokenService) {
+class BusinessService(
 
-    fun authorize(
-        login: String,
-        password: String,
-        codeChallenge: String,
-        provider: Provider,
-        clientId: String,
-        oidc: Boolean
-    ): Mono<String> {
+    private val authService: AuthService,
+    private val tokenService: TokenService
+) {
+
+    fun authorize(login: String, password: String, codeChallenge: String, provider: Provider, clientId: String, oidc: Boolean): Mono<String> {
         return authService.authorize(login, password, codeChallenge, provider, clientId, oidc).map { it.code }
     }
 
     fun getPublicJwk(alias: String, encoding: String): Mono<BertePublicKey> {
-        return tokenService.getKey(alias, encoding)
+        return tokenService.getKey(alias, encoding).map { BertePublicKey("", "", "", it.toString()) }
     }
 
     fun token(code: String, clientId: String, verifier: String): Mono<AuthorizationResult> {
