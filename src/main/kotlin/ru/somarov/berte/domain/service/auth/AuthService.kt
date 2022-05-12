@@ -23,7 +23,7 @@ class AuthService(
 
     private val cache = "code"
 
-    fun login(username: String, password: String, codeChallenge: String, provider: Provider, clientId: String, oidc: Boolean): Mono<AuthorizationCodeInfo> {
+    fun authorize(username: String, password: String, codeChallenge: String, provider: Provider, clientId: String, oidc: Boolean): Mono<AuthorizationCodeInfo> {
         return authManager.authenticate(createAuthentication(username, password, provider))
             .map {
                 val info = AuthorizationCodeInfo(UUID.fromString((it.details as HashMap<String, String>)["id"]),

@@ -19,7 +19,7 @@ class AuthBusinessService(private val authService: AuthService, private val toke
         clientId: String,
         oidc: Boolean
     ): Mono<String> {
-        return authService.login(login, password, codeChallenge, provider, clientId, oidc).map { it.code }
+        return authService.authorize(login, password, codeChallenge, provider, clientId, oidc).map { it.code }
     }
 
     fun getPublicJwk(alias: String, encoding: String): Mono<BertePublicKey> {

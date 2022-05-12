@@ -7,8 +7,8 @@ import java.util.*
 
 @Component
 class PersistenceFacade (
-    private val invalidTokenRepo: TokenDao,
-    private val resetPasswordTokenRepo: UserDao
+    private val tokenDao: TokenDao,
+    private val userDao: UserDao
 ) {
     fun saveRefresh(refresh: String, userId: UUID) {
         TODO("Not yet implemented")
