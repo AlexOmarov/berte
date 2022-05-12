@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator
@@ -30,9 +31,7 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.util.pattern.PathPatternParser
 import reactor.core.publisher.Mono
-import ru.somarov.berte.conf.properties.AppProps
-import ru.somarov.berte.core.security.DefaultUserDetailsService
-import ru.somarov.berte.persistence.PersistenceFacade
+import ru.somarov.berte.conf.properties.BerteCustomProps
 import java.security.SecureRandom
 import java.util.*
 
@@ -48,7 +47,7 @@ import java.util.*
 @Configuration
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
-class SecurityConfig(val props: AppProps) {
+class SecurityConfig(val props: BerteCustomProps) {
 
     @Bean
     fun securityWebFilterChain(http: ServerHttpSecurity, authenticationManagerResolver: ReactiveAuthenticationManagerResolver<ServerWebExchange>): SecurityWebFilterChain {
@@ -89,8 +88,8 @@ class SecurityConfig(val props: AppProps) {
 
     // Provider used in login endpoint
     @Bean
-    fun daoProvider(persistenceFacade: PersistenceFacade): DaoAuthenticationProvider {
-        return DaoAuthenticationProvider().also { it.setUserDetailsService(DefaultUserDetailsService(persistenceFacade)) }
+    fun daoProvider(service: UserDetailsService): DaoAuthenticationProvider {
+        return DaoAuthenticationProvider().also { it.setUserDetailsService(service) }
     }
 
     // Auth managers, Password encoders, auth converters for filter
