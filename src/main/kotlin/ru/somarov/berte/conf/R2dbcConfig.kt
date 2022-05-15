@@ -1,4 +1,4 @@
-package ru.somarov.berte.conf.config
+package ru.somarov.berte.conf
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.r2dbc.config.EnableR2dbcAuditing

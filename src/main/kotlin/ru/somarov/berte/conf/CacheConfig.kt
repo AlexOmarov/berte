@@ -1,4 +1,4 @@
-package ru.somarov.berte.conf.config
+package ru.somarov.berte.conf
 
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Configuration

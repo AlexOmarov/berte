@@ -1,4 +1,4 @@
-package ru.somarov.berte.conf.config
+package ru.somarov.berte.conf
 
 import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.proc.SecurityContext
