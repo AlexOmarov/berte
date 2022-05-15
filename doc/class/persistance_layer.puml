@@ -1,0 +1,60 @@
+@startuml
+title Persistence layer
+header Created at 01.05.2022 Modified at 01.05.2022
+
+'Class definitions
+
+class PersistenceFacade {
+UserDao userDao
+DatabaseClient client
+List<ReactiveCrudRepo> repos
+--
+All persistence methods
+}
+note left of PersistenceFacade: Фасад / адаптер, \nпреобразует сущности \npersistence layer \nв сущности бизнес-уровня
+
+class UserDao {
+R2DBCTemplate template
+DatabaseClient client
+List<ReactiveCrudRepo> repos
+--
+All persistence methods related to user
+}
+
+class TokenDao {
+R2DBCTemplate template
+DatabaseClient client
+List<ReactiveCrudRepo> repos
+--
+All persistence methods related to tokens
+}
+
+class R2DBCTemplate {
+
+}
+
+class DatabaseClient {
+}
+
+class BusinessServices {
+}
+
+interface ReactiveCrudRepo {
+}
+
+'Class relationships
+
+UserDao "1" *-- "1" R2DBCTemplate
+UserDao "1" *-- "1" DatabaseClient
+UserDao "1" *-- "n" ReactiveCrudRepo
+
+TokenDao "1" *-- "1" R2DBCTemplate
+TokenDao "1" *-- "1" DatabaseClient
+TokenDao "1" *-- "n" ReactiveCrudRepo
+
+PersistenceFacade "1" *-- "1" TokenDao
+PersistenceFacade "1" *-- "1" UserDao
+
+BusinessServices "n" *-- "1" PersistenceFacade
+
+@enduml
