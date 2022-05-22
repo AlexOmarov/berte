@@ -1,21 +1,6 @@
 version: '3.9'
 
 services:
-  db:
-    container_name: berte_db
-    image: postgres
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-berte}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-berte}
-      PGDATA: /data/postgres
-    #volumes:
-      #- postgres:/data/postgres
-    ports:
-      - "5433:5432"
-    networks:
-      - berte
-    restart: unless-stopped
-
   berte:
     build: .
     container_name: berte
@@ -23,18 +8,9 @@ services:
       - db
     env_file:
       - ./src/main/resources/application-dev.properties
-    environment:
-      "spring.r2dbc.url": "r2dbc:postgresql://db:5432/berte"
-      "spring.flyway.url": "jdbc:postgresql://db:5432/berte"
-      "spring.quartz.properties.org.quartz.dataSource.quartzDataSource.URL": "jdbc:postgresql://db:5432/berte?schema=berte"
-    networks:
-      - berte
     ports:
       - "11006:11006"
 
 networks:
   berte:
     driver: bridge
-
-volumes:
-  postgres:
