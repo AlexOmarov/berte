@@ -5,16 +5,24 @@ import reactor.core.publisher.Mono
 import ru.somarov.berte.layers.domain.AuthService
 import ru.somarov.berte.layers.domain.BerteTokenService
 import ru.somarov.berte.layers.dto.AuthorizationResult
+import ru.somarov.berte.layers.dto.AuthorizedTokenHolder
 import ru.somarov.berte.layers.dto.BertePublicKey
 import ru.somarov.berte_api.constant.Provider
 
 @Service
-class BusinessService(
+class UserAuthorizationService(
     private val authService: AuthService,
     private val berteTokenService: BerteTokenService
 ) {
 
-    fun authorize(login: String, password: String, codeChallenge: String, provider: Provider, clientId: String, oidc: Boolean): Mono<String> {
+    fun authorize(
+        login: String,
+        password: String,
+        codeChallenge: String,
+        provider: Provider,
+        clientId: String,
+        oidc: Boolean
+    ): Mono<String> {
         return authService.authorize(login, password, codeChallenge, provider, clientId, oidc).map { it.code }
     }
 
@@ -39,5 +47,9 @@ class BusinessService(
 
     fun logout(id: String?, access: String, refresh: String, rememberMe: String?): Mono<Void> {
         return Mono.empty()
+    }
+
+    fun refresh(token: String): Mono<AuthorizedTokenHolder> {
+        return Mono.just(AuthorizedTokenHolder("", "", "", ""))
     }
 }

@@ -5,7 +5,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Mono
-import ru.somarov.berte.layers.business.BusinessService
+import ru.somarov.berte.layers.business.UserAuthorizationService
 import ru.somarov.berte_api.constant.BerteKeyType
 import ru.somarov.berte_api.dto.BerteKey
 import ru.somarov.berte_api.request.*
@@ -13,7 +13,7 @@ import ru.somarov.berte_api.response.*
 
 @RestController
 @RequestMapping("/oauth2")
-class OAuth2Controller(private val authService: BusinessService) {
+class OAuth2Controller(private val authService: UserAuthorizationService) {
 
     @PostMapping("/authorize", consumes = ["application/json"], produces = ["application/json"])
     fun authorize(@RequestBody request: Oauth2CodeRequest): Mono<ResponseEntity<Oauth2CodeResponse>> {
@@ -32,6 +32,13 @@ class OAuth2Controller(private val authService: BusinessService) {
     fun logout(@RequestBody request: LogoutRequest, @AuthenticationPrincipal user: User): Mono<ResponseEntity<LogoutResponse>> {
         return authService.logout(request.id, request.access, request.refresh, request.rememberMe).map {
             ResponseEntity.ok(LogoutResponse("ok"))
+        }
+    }
+
+    @PostMapping("/token/refresh", consumes = ["application/json"], produces = ["application/json"])
+    fun refresh(@RequestBody request: RefreshRequest): Mono<ResponseEntity<RefreshResponse>> {
+        return authService.refresh(request.token).map {
+            ResponseEntity.ok(RefreshResponse(it.access, it.refresh))
         }
     }
 
