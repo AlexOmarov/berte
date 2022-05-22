@@ -1,13 +1,6 @@
 package ru.somarov.berte.layers.endpoint
 
-import com.nimbusds.jose.JWSAlgorithm
-import com.nimbusds.jose.JWSHeader
-import com.nimbusds.jose.JWSObject
-import com.nimbusds.jose.Payload
-import com.nimbusds.jose.crypto.RSASSASigner
-import com.nimbusds.jwt.JWTClaimsSet
 import com.ninjasquad.springmockk.MockkBean
-import io.mockk.every
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,10 +15,8 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Mono
 import ru.somarov.berte.conf.constants.Constants.AUTH_HEADER
 import ru.somarov.berte.conf.properties.BerteCustomProps
-import ru.somarov.berte.layers.domain.AuthService
-import ru.somarov.berte.layers.domain.JwtService
+import ru.somarov.berte.layers.business.BusinessService
 import ru.somarov.berte_api.request.KeysRequest
-import java.util.*
 
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension::class, MockKExtension::class)
@@ -36,10 +27,7 @@ import java.util.*
 class OAuth2ControllerTest {
 
     @MockkBean
-    private lateinit var authService: AuthService
-
-    @MockkBean
-    private lateinit var jwtService: JwtService
+    private lateinit var service: BusinessService
 
     @Autowired
     private lateinit var appProps: BerteCustomProps
@@ -49,8 +37,7 @@ class OAuth2ControllerTest {
 
     //@Test
     fun `Authenticated request passes and valid response is returned`() {
-        every { jwtService.public() } returns Mono.just(appProps.security.jwt.keys.public)
-        val token = token("user", appProps)
+        val token = null
         val request = KeysRequest("alias", "encoding")
         val exchange = webClient.post()
             .uri("/auth/jwk")
@@ -59,19 +46,5 @@ class OAuth2ControllerTest {
             .body(Mono.just(request), KeysRequest::class.java)
             .exchange()
         exchange.expectStatus().is2xxSuccessful
-    }
-
-    private fun token(name: String, props: BerteCustomProps): String {
-        val claims = JWTClaimsSet.Builder()
-            .issueTime(Date())
-            .expirationTime(Date(Date().time + 30000))
-            .subject(name)
-            .claim("scope", "PLAYER")
-            .build()
-        val payload = Payload(claims.toJSONObject())
-        val header = JWSHeader(JWSAlgorithm.RS512)
-        val token = JWSObject(header, payload)
-        token.sign(RSASSASigner(props.security.jwt.keys.private))
-        return token.serialize(false)
     }
 }
