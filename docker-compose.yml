@@ -10,7 +10,3 @@ services:
       - ./src/main/resources/application-dev.properties
     ports:
       - "11006:11006"
-
-networks:
-  berte:
-    driver: bridge
