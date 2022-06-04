@@ -17,7 +17,14 @@ class OAuth2Controller(private val authService: UserAuthorizationService) {
 
     @PostMapping("/authorize", consumes = ["application/json"], produces = ["application/json"])
     fun authorize(@RequestBody request: Oauth2CodeRequest): Mono<ResponseEntity<Oauth2CodeResponse>> {
-        return authService.authorize(request.login, request.secret, request.codeChallenge, request.provider, request.clientId, true)
+        return authService.authorize(
+            request.login,
+            request.secret,
+            request.codeChallenge,
+            request.provider,
+            request.clientId,
+            true
+        )
             .map { ResponseEntity.ok(Oauth2CodeResponse(it)) }
     }
 
@@ -29,7 +36,10 @@ class OAuth2Controller(private val authService: UserAuthorizationService) {
     }
 
     @PostMapping("/logout", consumes = ["application/json"], produces = ["application/json"])
-    fun logout(@RequestBody request: LogoutRequest, @AuthenticationPrincipal user: User): Mono<ResponseEntity<LogoutResponse>> {
+    fun logout(
+        @RequestBody request: LogoutRequest,
+        @AuthenticationPrincipal user: User
+    ): Mono<ResponseEntity<LogoutResponse>> {
         return authService.logout(request.id, request.access, request.refresh, request.rememberMe).map {
             ResponseEntity.ok(LogoutResponse("ok"))
         }
@@ -43,7 +53,10 @@ class OAuth2Controller(private val authService: UserAuthorizationService) {
     }
 
     @PostMapping("/token/revoke", consumes = ["application/json"], produces = ["application/json"])
-    fun revoke(@RequestBody request: RevokeRequest, @AuthenticationPrincipal user: User): Mono<ResponseEntity<RevokeResponse>> {
+    fun revoke(
+        @RequestBody request: RevokeRequest,
+        @AuthenticationPrincipal user: User
+    ): Mono<ResponseEntity<RevokeResponse>> {
         return authService.revoke(request.access, request.refresh, request.rememberMe, request.id).map {
             ResponseEntity.ok(RevokeResponse("ok"))
         }
