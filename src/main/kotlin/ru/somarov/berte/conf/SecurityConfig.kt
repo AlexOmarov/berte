@@ -50,20 +50,31 @@ import java.util.*
 class SecurityConfig(val props: BerteCustomProps) {
 
     @Bean
-    fun securityWebFilterChain(http: ServerHttpSecurity, authenticationManagerResolver: ReactiveAuthenticationManagerResolver<ServerWebExchange>): SecurityWebFilterChain {
+    fun securityWebFilterChain(
+        http: ServerHttpSecurity,
+        authenticationManagerResolver: ReactiveAuthenticationManagerResolver<ServerWebExchange>
+    ): SecurityWebFilterChain {
         return http.csrf().disable() // CSRF
             .cors().configurationSource( // CORS
                 UrlBasedCorsConfigurationSource(PathPatternParser()).also { source ->
                     source.setCorsConfigurations(
-                    Collections.singletonMap("/**", CorsConfiguration().also {
-                        val cors = props.security.cors
-                        it.allowedOrigins = cors.origins; it.allowedMethods = cors.methods
-                        it.allowedHeaders = cors.headers; it.exposedHeaders = cors.exposedHeaders
-                        it.allowCredentials = cors.allowCreds; it.maxAge = cors.age })) })
+                        Collections.singletonMap(
+                            "/**",
+                            CorsConfiguration().also {
+                                val cors = props.security.cors
+                                it.allowedOrigins = cors.origins; it.allowedMethods = cors.methods
+                                it.allowedHeaders = cors.headers; it.exposedHeaders = cors.exposedHeaders
+                                it.allowCredentials = cors.allowCreds; it.maxAge = cors.age
+                            }
+                        )
+                    )
+                }
+            )
             .and() // Authn
             .httpBasic().disable()
             .formLogin().disable()
-            .oauth2ResourceServer().authenticationManagerResolver(authenticationManagerResolver).bearerTokenConverter(authenticationConverter()).and()
+            .oauth2ResourceServer().authenticationManagerResolver(authenticationManagerResolver)
+            .bearerTokenConverter(authenticationConverter()).and()
             .logout()
             .and() // Authz
             .authorizeExchange()
@@ -74,7 +85,10 @@ class SecurityConfig(val props: BerteCustomProps) {
 
     // Only provider used in filters
     @Bean
-    fun jwtProvider(authoritiesConverter: Converter<Jwt, Collection<GrantedAuthority>>, validators: List<OAuth2TokenValidator<Jwt>>): JwtAuthenticationProvider {
+    fun jwtProvider(
+        authoritiesConverter: Converter<Jwt, Collection<GrantedAuthority>>,
+        validators: List<OAuth2TokenValidator<Jwt>>
+    ): JwtAuthenticationProvider {
         val processor = DefaultJWTProcessor<SecurityContext>()
         processor.jwsKeySelector = SingleKeyJWSKeySelector(JWSAlgorithm.RS512, props.security.jwt.keys.public)
         val decoder = NimbusJwtDecoder(processor)
@@ -122,5 +136,4 @@ class SecurityConfig(val props: BerteCustomProps) {
     fun authoritiesConverter(): JwtGrantedAuthoritiesConverter {
         return JwtGrantedAuthoritiesConverter().also { it.setAuthorityPrefix("ROLE_") }
     }
-
 }

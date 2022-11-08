@@ -11,15 +11,21 @@ import java.security.PublicKey
 import java.util.*
 
 @Service
-class BerteTokenService (private val jwtService: JwtService, private val props: BerteCustomProps, private val persistence: PersistenceFacade): TokenService {
+class BerteTokenService(
+    private val jwtService: JwtService,
+    private val props: BerteCustomProps,
+    private val persistence: PersistenceFacade
+) : TokenService {
 
     fun generateTokens(username: String, userId: UUID, oidc: Boolean): Mono<AuthorizedTokenHolder> {
-        val access = jwtService.jwt(username, props.security.jwt.accessExpiration, false)
-        val refresh = UUID.randomUUID().toString()
-        persistence.saveRefresh(refresh, userId)
-        val id = if (oidc) jwtService.jwt(username, props.security.jwt.accessExpiration, true) else null
-
-        return Mono.just(AuthorizedTokenHolder(access, refresh, null, id))
+        return Mono.just(jwtService.jwt(username, props.security.jwt.accessExpiration, false)).flatMap { access ->
+            persistence.saveRefresh(UUID.randomUUID(), userId).map {
+                AuthorizedTokenHolder(
+                    access, it.id?.toString(), null,
+                    if (oidc) jwtService.jwt(username, props.security.jwt.accessExpiration, true) else null
+                )
+            }
+        }
     }
 
     fun getKey(alias: String, encoding: String): Mono<PublicKey> {
