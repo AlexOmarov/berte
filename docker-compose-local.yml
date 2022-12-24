@@ -2,7 +2,9 @@ version: '3.9'
 
 services:
   berte:
-    image: decentboat/berte
+    build: .
     container_name: berte
+    env_file:
+      - berte_app/src/main/resources/application-dev.properties
     ports:
       - "8090:8090"

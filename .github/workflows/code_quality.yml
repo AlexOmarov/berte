@@ -1,0 +1,56 @@
+name: "Code quality workflow"
+
+on:
+  push:
+    branches:
+      - dev
+      - master
+
+permissions: read-all
+
+concurrency:
+  group: code_quality
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+    working-directory: .
+
+env:
+  CACHE_NUMBER: 9  # increase to reset cache manually
+
+
+jobs:
+  code_quality:
+    name: "Code quality"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.9
+
+      - name: Add conda to system path
+        run: |
+          # $CONDA is an environment variable pointing to the root of the miniconda directory
+          echo $CONDA/bin >> $GITHUB_PATH
+          sudo apt-get update -y && sudo apt-get install -y --no-install-recommends build-essential gcc libsndfile1
+          sudo apt-get upgrade libstdc++6
+          sudo conda update -n base -c defaults conda
+
+      - name: Install deps
+        run: conda env update --file unix_environment.yaml --name base
+
+      - name: Test with pytest
+        run: |
+          python -m pytest -s -v  src/test/app --cov-report xml:coverage.xml --cov --cov-report term --cov-config .coveragerc
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

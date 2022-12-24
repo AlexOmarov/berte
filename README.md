@@ -68,7 +68,7 @@ Before launching, it is needed to build child module `api` and parent module `be
 mvn verify clean install
 mvn package
 ```
-Then, use `docker-compose.yml` to build the image and create a container.
+Then, use `docker-compose-local.yml` to build the image and create a container.
 Note, that by default container will run using `application-dev.properties`
 Also, it is needed to add following env properties:
 ```properties

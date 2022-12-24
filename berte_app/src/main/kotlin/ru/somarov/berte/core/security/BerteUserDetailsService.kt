@@ -7,16 +7,15 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import ru.somarov.berte.layers.persistence.PersistenceFacade
 
 @Service
-class BerteUserDetailsService(persistence: PersistenceFacade) : UserDetailsService {
+class BerteUserDetailsService : UserDetailsService {
 
     @Autowired
     private lateinit var passwordEncoder: PasswordEncoder
 
     override fun loadUserByUsername(username: String?): UserDetails {
-        val auths = mutableListOf(SimpleGrantedAuthority( "PLAYER"))
+        val auths = mutableListOf(SimpleGrantedAuthority("PLAYER"))
         return User(username ?: "def", passwordEncoder.encode("password"), auths)
     }
 }
