@@ -1,4 +1,7 @@
 rootProject.name = "berte"
+
+include(":composeApp")
+
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
@@ -27,5 +30,3 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-
-include(":composeApp")

@@ -7,12 +7,23 @@ androidx-activityCompose = "1.9.0"
 androidx-appcompat = "1.7.0"
 androidx-constraintlayout = "2.1.4"
 androidx-core-ktx = "1.13.1"
-androidx-espresso-core = "3.6.0"
+androidx-espresso-core = "3.6.1"
 androidx-material = "1.12.0"
-androidx-test-junit = "1.2.0"
+androidx-test-junit = "1.2.1"
 compose-plugin = "1.6.11"
 junit = "4.13.2"
 kotlin = "2.0.0"
+
+# CI
+detekt = "1.23.6"
+kover = "0.8.1"
+sonarqube = "5.0.0.4638"
+
+# Tests
+kotest = "5.8.1"
+mockito = "5.3.1"
+awaitility = "4.2.1"
+testcontainers = "1.19.8"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -26,9 +37,24 @@ androidx-material = { group = "com.google.android.material", name = "material", 
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 
+kotest = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }
+kotest-junit = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
+kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
+awaitility = { group = "org.awaitility", name = "awaitility-kotlin", version.ref = "awaitility" }
+mockito = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockito" }
+testcontainers-junit = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
+
+detekt-ktlint = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
+kotest = { id = "io.kotest.multiplatform", version.ref = "kotest" }
