@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
@@ -36,21 +35,7 @@ kotlin {
         }
     }
 
-    jvm("desktop")
-
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "ComposeApp"
-            isStatic = true
-        }
-    }
-
     sourceSets {
-        val desktopMain by getting
 
         androidMain.dependencies {
             implementation(compose.preview)
@@ -63,9 +48,6 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-        }
-        desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
         }
     }
 }
@@ -110,20 +92,5 @@ android {
     buildToolsVersion = "34.0.0"
     dependencies {
         debugImplementation(compose.uiTooling)
-    }
-}
-
-compose.desktop {
-    application {
-        mainClass = "MainKt"
-
-        nativeDistributions {
-            windows{
-                includeAllModules = true
-            }
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "ru.somarov.berte"
-            packageVersion = "1.0.0"
-        }
     }
 }

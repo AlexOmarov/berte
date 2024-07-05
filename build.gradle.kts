@@ -21,7 +21,7 @@ dependencies {
 
 detekt {
     config.from(files("$rootDir/detekt-config.yml"))
-    source.from("shared", "native", "server", "composeApp")
+    source.from("composeApp")
     reportsDir = file("$buildDir/reports/detekt")
 }
 
