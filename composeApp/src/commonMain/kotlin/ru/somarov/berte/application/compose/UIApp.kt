@@ -99,7 +99,7 @@ class AppViewModel(private val navController: NavHostController) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            delay(1000L)
+            delay(1500L)
             navigateTo(UIScreen.Login)
         }
     }
