@@ -1,3 +1,4 @@
+/*
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.ui.graphics.Color
@@ -32,4 +33,4 @@ val DarkSpaceThemeColors = darkColors(
     onSurface = Color.White,
     error = Color(0xFFD32F2F), // Comet Red
     onError = Color.White
-)
+)*/

@@ -5,21 +5,25 @@ import androidx.compose.runtime.remember
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import ru.somarov.berte.application.compose.UIApp
 
 @Composable
 @Preview
 fun App() {
-    var isLogin by remember { mutableStateOf(true) }
+    UIApp()
+ /*   var isLogin by remember { mutableStateOf(true) }
     SpaceTheme(isSystemInDarkTheme()) {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.background
+            color = MaterialTheme.colorScheme.background,
         ) {
             Column(
                 modifier = Modifier
@@ -38,16 +42,16 @@ fun App() {
                 }
             }
         }
-    }
+    }*/
 }
 
 @Composable
 fun LoginForm(onRegisterClick: () -> Unit) {
-    var login by remember { mutableStateOf("") }
+  /*  var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     Column {
-        Text(text = "Login", style = MaterialTheme.typography.h4)
+        Text(text = "Login", style = MaterialTheme.typography.bodyMedium)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -74,7 +78,7 @@ fun LoginForm(onRegisterClick: () -> Unit) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { /* Handle login */ },
+            onClick = { *//* Handle login *//* },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Login")
@@ -88,12 +92,12 @@ fun LoginForm(onRegisterClick: () -> Unit) {
         ) {
             Text("Don't have an account? Register")
         }
-    }
+    }*/
 }
 
 @Composable
 fun RegisterForm(onLoginClick: () -> Unit) {
-    var login by remember { mutableStateOf("") }
+   /* var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
 
@@ -138,7 +142,7 @@ fun RegisterForm(onLoginClick: () -> Unit) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { /* Handle registration */ },
+            onClick = { *//* Handle registration *//* },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Register")
@@ -152,5 +156,5 @@ fun RegisterForm(onLoginClick: () -> Unit) {
         ) {
             Text("Already have an account? Login")
         }
-    }
+    }*/
 }
