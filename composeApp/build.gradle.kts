@@ -49,6 +49,7 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
+            implementation(compose.materialIconsExtended)
             implementation(compose.runtimeSaveable)
             implementation(compose.components.uiToolingPreview)
 
@@ -59,6 +60,8 @@ kotlin {
             implementation(libs.ktor.client.encoding)
             implementation(libs.ktor.serialization.json)
             implementation(libs.ktor.serialization.cbor)
+
+            implementation(libs.kotlin.datetime)
 
             implementation(libs.androidx.kmp.navigation)
             implementation(libs.androidx.kmp.lifecycle.viewmodel)
