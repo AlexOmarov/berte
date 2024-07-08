@@ -16,8 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import ru.somarov.berte.application.viewmodel.Message
-import ru.somarov.berte.application.viewmodel.MessageType
+import ru.somarov.berte.application.dto.Message
+import ru.somarov.berte.application.dto.MessageType
 
 @Composable
 fun WaitBox(modifier: Modifier = Modifier) {
@@ -36,7 +36,7 @@ fun ErrorBox(message: String, modifier: Modifier = Modifier) {
                 contentColor = MaterialTheme.colorScheme.onErrorContainer
             )
         ) {
-            Text(message, modifier  = Modifier.padding(16.dp))
+            Text(message, modifier = Modifier.padding(16.dp))
         }
     }
 }
@@ -77,7 +77,7 @@ fun Message(message: Message, modifier: Modifier = Modifier, onClick: () -> Unit
         Text(
             text = message.text,
             modifier = Modifier.padding(all = 8.dp).fillMaxWidth(),
-            textAlign  = when  (message.messageType)  {
+            textAlign = when (message.messageType) {
                 MessageType.InMessage -> TextAlign.Left
                 MessageType.OutMessage -> TextAlign.Right
                 MessageType.Warning -> TextAlign.Center

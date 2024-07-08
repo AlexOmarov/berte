@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 import ru.somarov.berte.UIScreen
 import ru.somarov.berte.application.viewmodel.AppViewModel
 import ru.somarov.berte.application.viewmodel.HomeScreenViewModel
-import ru.somarov.berte.application.viewmodel.UIMessages
+import ru.somarov.berte.ui.Messages
 
 @Composable
 fun HomeScreen(
@@ -50,7 +50,7 @@ fun HomeScreen(
             }
         }
 
-        UIMessages(messages = sorted)
+        Messages(messages = sorted)
 
         OutlinedTextField(
             value = value,
