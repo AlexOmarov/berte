@@ -7,8 +7,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import ru.somarov.berte.application.dto.Message
 import ru.somarov.berte.application.dto.MessageType
 
@@ -26,11 +24,15 @@ class HomeScreenViewModel : ViewModel() {
     init {
         @OptIn(kotlinx.coroutines.FlowPreview::class)
         messages
-            .debounce(2000)
+            .debounce(DEBOUNCE_PERIOD)
             .onEach {
                 if (it.isNotEmpty() && it.last().messageType == MessageType.OutMessage) {
                     sendMessage("get message from server", MessageType.InMessage)
                 }
             }.launchIn(viewModelScope)
+    }
+
+    companion object {
+        const val DEBOUNCE_PERIOD = 2000L
     }
 }

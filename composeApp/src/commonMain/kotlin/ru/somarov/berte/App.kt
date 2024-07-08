@@ -41,12 +41,8 @@ fun App(
         backStackEntry?.destination?.route ?: UIScreen.Login.name
     )
 
-    navController.createGraph(
-        startDestination = UIScreen.Login.name,
-        route = "app"
-    ) {
+    navController.createGraph(startDestination = UIScreen.Login.name, route = "app") { }
 
-    }
     Scaffold(
         topBar = {
             UIAppBar(

@@ -41,6 +41,7 @@ import ru.somarov.berte.ui.ErrorBox
 import ru.somarov.berte.ui.WaitBox
 
 @Composable
+@Suppress("CyclomaticComplexMethod") // refactor
 fun LoginScreen(
     navController: NavHostController,
     viewModel: AppViewModel = viewModel(key = "app") { AppViewModel(navController) },
@@ -57,6 +58,7 @@ fun LoginScreen(
         if (showPassword) VisualTransformation.None else PasswordVisualTransformation()
     }
 
+    @Suppress("LongMethod", "CyclomaticComplexMethod") // refactor
     @Composable
     fun LoginScreenContent(modifier: Modifier = Modifier) {
         Column(modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {

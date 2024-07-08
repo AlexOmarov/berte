@@ -83,7 +83,6 @@ fun Message(message: Message, modifier: Modifier = Modifier, onClick: () -> Unit
                 MessageType.Warning -> TextAlign.Center
             }
         )
-
     }
 }
 

@@ -46,7 +46,7 @@ class LoginScreenViewModel : ViewModel() {
 
     suspend fun loginMock(username: String, password: String) {
         _loginProgress.emit(CommonResult.Loading())
-        delay(300)
+        delay(LOGIN_MOCK_DELAY)
         _loginProgress.emit(
             CommonResult.Success("Иван Иванович")
         )
@@ -93,10 +93,6 @@ class LoginScreenViewModel : ViewModel() {
     companion object {
         val requestToken = "https://api.twitter.com/oauth/request_token"
         val ok = "https://api.twitter.com/oauth/ok"
+        const val LOGIN_MOCK_DELAY = 300L
     }
 }
-
-
-
-
-

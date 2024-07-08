@@ -1,10 +1,7 @@
 package ru.somarov.berte.application.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import ru.somarov.berte.UIScreen
 
 class AppViewModel(
@@ -17,5 +14,4 @@ class AppViewModel(
         }
         navController.navigate(uiScreen.name)
     }
-
 }
