@@ -36,28 +36,30 @@ kotlin {
     }
 
     sourceSets {
-
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
 
             implementation(libs.ktor.client.okhttp)
         }
+
         commonMain.dependencies {
-            implementation(compose.runtime)
+            implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
             implementation(compose.foundation)
             implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
             implementation(compose.materialIconsExtended)
+            implementation(compose.runtime)
             implementation(compose.runtimeSaveable)
-            implementation(compose.components.uiToolingPreview)
+            implementation(compose.ui)
 
             implementation(libs.ktor.client.core)
+
             implementation(libs.ktor.client.auth)
+            implementation(libs.ktor.client.encoding)
             implementation(libs.ktor.client.logging)
             implementation(libs.ktor.client.negotiation)
-            implementation(libs.ktor.client.encoding)
+
             implementation(libs.ktor.serialization.json)
             implementation(libs.ktor.serialization.cbor)
 
@@ -67,10 +69,8 @@ kotlin {
             implementation(libs.androidx.kmp.lifecycle.viewmodel)
         }
 
-        val wasmJsMain by getting {
-            dependencies {
-                implementation(libs.ktor.client.js)
-            }
+        wasmJsMain.dependencies {
+            implementation(libs.ktor.client.js)
         }
     }
 }

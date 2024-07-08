@@ -1,10 +1,9 @@
-package ru.somarov.berte.application.compose.screen
+package ru.somarov.berte.ui.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Send
-import androidx.compose.material.icons.outlined.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,28 +21,25 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
-import ru.somarov.berte.application.compose.AppViewModel
-import ru.somarov.berte.application.compose.UIScreen
+import ru.somarov.berte.UIScreen
+import ru.somarov.berte.application.viewmodel.AppViewModel
+import ru.somarov.berte.application.viewmodel.HomeScreenViewModel
+import ru.somarov.berte.application.viewmodel.UIMessages
 
 @Composable
 fun HomeScreen(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    viewModel: AppViewModel = androidx.lifecycle.viewmodel.compose.viewModel(key = "app") {
-        AppViewModel(
-            navController
-        )
-    },
-    screenViewModel: HomeScreenViewModel = viewModel {
-        HomeScreenViewModel()
-    }
+    viewModel: AppViewModel = viewModel(key = "app") { AppViewModel(navController) },
+    screenViewModel: HomeScreenViewModel = viewModel { HomeScreenViewModel() }
 ) {
     val messages by screenViewModel.messages.collectAsState()
-    val sorted = remember(messages) {
-        messages.sortedByDescending { it.date }
-    }
+    val sorted = remember(messages) { messages.sortedByDescending { it.date } }
+
     var value by remember { mutableStateOf("") }
+
     val scope = rememberCoroutineScope()
+
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
         Row {
             Button(onClick = { viewModel.navigateTo(UIScreen.Session) }) {
@@ -53,7 +49,9 @@ fun HomeScreen(
                 Text("Logout")
             }
         }
+
         UIMessages(messages = sorted)
+
         OutlinedTextField(
             value = value,
             onValueChange = { value = it },
@@ -61,8 +59,7 @@ fun HomeScreen(
             trailingIcon = {
                 IconButton(onClick = {
                     scope.launch {
-                        val vl = value
-                        screenViewModel.sendMessage(vl)
+                        screenViewModel.sendMessage(value)
                         value = ""
                     }
                 }) {

@@ -1,14 +1,11 @@
 package ru.somarov.berte
 
-import App
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
 
 class MainActivity : ComponentActivity() {
@@ -17,18 +14,6 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
 
-        setContent {
-            Box(
-                Modifier.safeDrawingPadding()
-            ) {
-                App()
-            }
-        }
+        setContent { Box(Modifier.safeDrawingPadding()) { App() } }
     }
-}
-
-@Preview
-@Composable
-fun AppAndroidPreview() {
-    App()
 }
