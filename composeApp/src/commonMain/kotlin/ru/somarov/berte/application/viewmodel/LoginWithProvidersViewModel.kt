@@ -20,13 +20,14 @@ class LoginWithProvidersViewModel(private val viewModel: AppViewModel) : ViewMod
             val res: CommonResult<String> = openAuthForResult(
                 context,
                 OAuthState(null, null),
+//                {"installed":{"client_id":"191033215032-36m9077g5pqd2l67i686qslb50mtveha.apps.googleusercontent.com","project_id":"berte-428917","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs"}}
                 OAuthSettings(
-                    authorizationEndpoint = "https://accounts.google.com/o/oauth2/v2/auth",
+                    authorizationEndpoint = "https://accounts.google.com/o/oauth2/auth",
                     tokenEndpoint = "https://oauth2.googleapis.com/token",
-                    clientId = "89fpkm9v6ndc6z1usqzu6p6my43p774q",
-                    redirectUri = "http://localhost:8080",
-                    scope = "userinfo.profile",
-                    tokenToService = "https://www.googleapis.com/oauth2/v4/token",
+                    clientId = "191033215032-36m9077g5pqd2l67i686qslb50mtveha.apps.googleusercontent.com",
+                    redirectUri = "",
+                    scope = "userinfo profile",
+                    tokenToService = null,
                 )
             )
             if (res is CommonResult.Success) {
