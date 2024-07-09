@@ -48,7 +48,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
 
             implementation(libs.openid.appauth.android)
-            implementation(libs.google.material)
+            implementation(libs.androidx.material)
 
             implementation(libs.ktor.client.okhttp)
         }
