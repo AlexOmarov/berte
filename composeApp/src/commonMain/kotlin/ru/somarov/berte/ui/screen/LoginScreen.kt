@@ -189,11 +189,10 @@ private fun LoginScreenContentPortrait(
             modifier = Modifier.padding(16.dp).size(80.dp)
         )
         Text("Login in Berte", style = MaterialTheme.typography.displayMedium)
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(10.dp))
         UsernameOutlinedText(username, Modifier.padding(16.dp).fillMaxWidth()) {
             username = it
         }
-        Spacer(Modifier.height(20.dp))
         PasswordOutlinedText(password, Modifier.padding(16.dp).fillMaxWidth()) {
             password = it
         }
@@ -231,8 +230,9 @@ private fun LoginScreenContentLandscape(
     var password by remember { mutableStateOf("") }
     Box(modifier.fillMaxSize().scrollByPlatform(), contentAlignment = Alignment.Center) {
         Column(Modifier.width(350.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Image(painter = painterResource(Res.drawable.berte), contentDescription = "berte", modifier = Modifier.padding(16.dp).size(80.dp))
             Text("Login in Berte", style = MaterialTheme.typography.displayMedium)
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(10.dp))
             UsernameOutlinedText(username, Modifier.padding(16.dp).fillMaxWidth()) {
                 username = it
             }
