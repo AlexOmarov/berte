@@ -1,5 +1,6 @@
 package ru.somarov.berte.ui.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -41,6 +43,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 import ru.somarov.berte.UIScreen
 import ru.somarov.berte.application.viewmodel.AppViewModel
 import ru.somarov.berte.application.viewmodel.LoginScreenViewModel
@@ -52,6 +55,8 @@ import ru.somarov.berte.ui.WaitBox
 import ru.somarov.berte.ui.component.LoginWithProviders
 import ru.somarov.berte.ui.rememberOrientation
 import ru.somarov.berte.ui.rememberPlatform
+import ru.somarov.library.resources.Res
+import ru.somarov.library.resources.berte
 
 @Composable
 @Suppress("CyclomaticComplexMethod") // refactor
@@ -178,7 +183,7 @@ private fun LoginScreenContentPortrait(
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     Column(modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-        Spacer(Modifier.height(20.dp))
+        Image(painter = painterResource(Res.drawable.berte), contentDescription = "berte", modifier = Modifier.padding(16.dp).size(80.dp))
         Text("Login in Berte", style = MaterialTheme.typography.displayMedium)
         Spacer(Modifier.height(20.dp))
         UsernameOutlinedText(username, Modifier.padding(16.dp).fillMaxWidth()) {
