@@ -17,12 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material.icons.outlined.Apps
-import androidx.compose.material.icons.outlined.Facebook
-import androidx.compose.material.icons.outlined.GMobiledata
-import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material3.Button
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -53,6 +48,7 @@ import ru.somarov.berte.infrastructure.network.CommonResult
 import ru.somarov.berte.ui.ErrorBox
 import ru.somarov.berte.ui.Orientation
 import ru.somarov.berte.ui.WaitBox
+import ru.somarov.berte.ui.component.LoginWithProviders
 import ru.somarov.berte.ui.rememberOrientation
 
 @Composable
@@ -204,18 +200,7 @@ private fun LoginScreenContentPortrait(
 
         Spacer(Modifier.height(20.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            FilledTonalIconButton(onClick = {}) {
-                Icon(Icons.Outlined.GMobiledata, contentDescription = "Google")
-            }
-            FilledTonalIconButton(onClick = {}) {
-                Icon(Icons.Outlined.Facebook, contentDescription = "Facebook")
-            }
-            FilledTonalIconButton(onClick = {}) {
-                Icon(Icons.Outlined.Apps, contentDescription = "Apple")
-            }
-            FilledTonalIconButton(onClick = {}) {
-                Icon(Icons.Outlined.Mail, contentDescription = "VK")
-            }
+            LoginWithProviders(viewModel)
         }
         Spacer(Modifier.height(20.dp))
         TextButton(onClick = { viewModel.navigateTo(UIScreen.Register) }) {
@@ -224,6 +209,7 @@ private fun LoginScreenContentPortrait(
     }
 }
 
+@Suppress("LongMethod", "CyclomaticComplexMethod") // refactor
 @Composable
 private fun LoginScreenContentLandscape(
     viewModel: AppViewModel,
@@ -255,18 +241,7 @@ private fun LoginScreenContentLandscape(
             }
             Spacer(Modifier.height(20.dp))
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                FilledTonalIconButton(onClick = {}) {
-                    Icon(Icons.Outlined.GMobiledata, contentDescription = "Google")
-                }
-                FilledTonalIconButton(onClick = {}) {
-                    Icon(Icons.Outlined.Facebook, contentDescription = "Facebook")
-                }
-                FilledTonalIconButton(onClick = {}) {
-                    Icon(Icons.Outlined.Apps, contentDescription = "Apple")
-                }
-                FilledTonalIconButton(onClick = {}) {
-                    Icon(Icons.Outlined.Mail, contentDescription = "VK")
-                }
+                LoginWithProviders(viewModel)
             }
             Spacer(Modifier.height(20.dp))
 

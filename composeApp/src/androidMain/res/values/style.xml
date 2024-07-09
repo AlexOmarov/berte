@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <style name="Widget.Fullscreen" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+    <style name="AppTheme.Fullscreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:actionBarStyle">@style/Widget.Fullscreen
+        </item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+    </style>
+    <style name="OpenAuth.AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    </style>
+</resources>

@@ -10,6 +10,12 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "ru.somarov.library.resources"
+    generateResClass = always
+}
+
 kotlin {
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
@@ -40,6 +46,9 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
 
+            implementation(libs.openid.appauth.android)
+            implementation(libs.google.material)
+
             implementation(libs.ktor.client.okhttp)
         }
 
@@ -55,6 +64,8 @@ kotlin {
 
             implementation(libs.ktor.client.core)
 
+            implementation(libs.uuid)
+
             implementation(libs.ktor.client.auth)
             implementation(libs.ktor.client.encoding)
             implementation(libs.ktor.client.logging)
@@ -64,6 +75,7 @@ kotlin {
             implementation(libs.ktor.serialization.cbor)
 
             implementation(libs.kotlin.datetime)
+            implementation(libs.kotlin.coroutines.core)
 
             implementation(libs.androidx.kmp.navigation)
             implementation(libs.androidx.kmp.lifecycle.viewmodel)
@@ -89,6 +101,7 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+        manifestPlaceholders["appAuthRedirectScheme"] = "ru.somarov.berte.oauth"
     }
     packaging {
         resources {
