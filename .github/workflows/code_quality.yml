@@ -31,7 +31,7 @@ jobs:
             
             ${{ github.event.commits[0].message }}
 
-            *${{ job.status }}*
+            *Starting*
             
             See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
       - name: Checkout
