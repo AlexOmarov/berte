@@ -12,9 +12,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import io.ktor.util.encodeBase64
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import net.openid.appauth.AuthorizationException
@@ -90,26 +87,15 @@ class OpenAuthActivity : AppCompatActivity() {
             /* redirectUri = */ Uri.parse(openAuthConfig.redirectUri)
         )
         val state = createUUID().encodeBase64()
-        val timestamp = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-            .toString()
-
-        val string =
-            "${openAuthConfig.clientId}${openAuthConfig.scope}${timestamp}${state}${openAuthConfig.redirectUri}"
 
         val authRequest = authRequestBuilder
             .setScopes(openAuthConfig.scope.split(" "))
-            .setAdditionalParameters(
-                mapOf("client_secret" to string.encodeBase64())
-            )
             .setState(state)
             .build()
 
         val authService = AuthorizationService(this)
         val authIntent = authService.getAuthorizationRequestIntent(authRequest)
         resultOauth.launch(authIntent)
-//        registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-//
-//        }.launch(authIntent)
     }
 
     private var state: OAuthState? = null
