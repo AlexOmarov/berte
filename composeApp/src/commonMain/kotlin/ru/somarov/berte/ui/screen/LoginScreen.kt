@@ -20,9 +20,7 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.Apps
 import androidx.compose.material.icons.outlined.Facebook
 import androidx.compose.material.icons.outlined.GMobiledata
-import androidx.compose.material.icons.outlined.GetApp
 import androidx.compose.material.icons.outlined.Mail
-import androidx.compose.material.icons.outlined.ViewKanban
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
@@ -31,8 +29,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -70,23 +66,24 @@ fun LoginScreen(
     val orientation = rememberOrientation()
     when (val ld = loading) {
         is CommonResult.Empty -> {
-            when(orientation) {
-                Orientation.PORTRAIT ->  LoginScreenContentPortrait(
+            when (orientation) {
+                Orientation.PORTRAIT -> LoginScreenContentPortrait(
                     viewModel = viewModel,
                     screenViewModel = screenViewModel,
                     modifier = Modifier.verticalScroll(
                         rememberScrollState()
                     )
                 )
+
                 Orientation.LANDSCAPE -> LoginScreenContentLandscape(viewModel, screenViewModel)
             }
         }
+
         is CommonResult.Error -> ErrorBox(ld.error.message ?: "error")
         is CommonResult.Loading -> WaitBox()
         is CommonResult.Success -> viewModel.navigateTo(UIScreen.Home)
     }
 }
-
 
 @Composable
 private fun UsernameOutlinedText(
@@ -118,6 +115,7 @@ private fun UsernameOutlinedText(
         modifier = modifier
     )
 }
+
 @Composable
 private fun PasswordOutlinedText(
     password: String,
@@ -185,7 +183,7 @@ private fun LoginScreenContentPortrait(
         Spacer(Modifier.height(20.dp))
         Text("Login in Berte", style = MaterialTheme.typography.displayMedium)
         Spacer(Modifier.height(20.dp))
-        UsernameOutlinedText(username,Modifier.padding(16.dp).fillMaxWidth()) {
+        UsernameOutlinedText(username, Modifier.padding(16.dp).fillMaxWidth()) {
             username = it
         }
         Spacer(Modifier.height(20.dp))
@@ -226,7 +224,6 @@ private fun LoginScreenContentPortrait(
     }
 }
 
-//@Suppress("LongMethod", "CyclomaticComplexMethod") // refactor
 @Composable
 private fun LoginScreenContentLandscape(
     viewModel: AppViewModel,
@@ -239,7 +236,7 @@ private fun LoginScreenContentLandscape(
         Column(Modifier.width(350.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Text("Login in Berte", style = MaterialTheme.typography.displayMedium)
             Spacer(Modifier.height(20.dp))
-            UsernameOutlinedText(username,Modifier.padding(16.dp).fillMaxWidth()) {
+            UsernameOutlinedText(username, Modifier.padding(16.dp).fillMaxWidth()) {
                 username = it
             }
             PasswordOutlinedText(password, Modifier.padding(16.dp).fillMaxWidth()) {
