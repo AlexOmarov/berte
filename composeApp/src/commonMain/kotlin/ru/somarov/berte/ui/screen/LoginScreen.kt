@@ -183,7 +183,11 @@ private fun LoginScreenContentPortrait(
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     Column(modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-        Image(painter = painterResource(Res.drawable.berte), contentDescription = "berte", modifier = Modifier.padding(16.dp).size(80.dp))
+        Image(
+            painter = painterResource(Res.drawable.berte),
+            contentDescription = "berte",
+            modifier = Modifier.padding(16.dp).size(80.dp)
+        )
         Text("Login in Berte", style = MaterialTheme.typography.displayMedium)
         Spacer(Modifier.height(20.dp))
         UsernameOutlinedText(username, Modifier.padding(16.dp).fillMaxWidth()) {
