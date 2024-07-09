@@ -47,9 +47,11 @@ import ru.somarov.berte.application.viewmodel.LoginScreenViewModel
 import ru.somarov.berte.infrastructure.network.CommonResult
 import ru.somarov.berte.ui.ErrorBox
 import ru.somarov.berte.ui.Orientation
+import ru.somarov.berte.ui.Platform
 import ru.somarov.berte.ui.WaitBox
 import ru.somarov.berte.ui.component.LoginWithProviders
 import ru.somarov.berte.ui.rememberOrientation
+import ru.somarov.berte.ui.rememberPlatform
 
 @Composable
 @Suppress("CyclomaticComplexMethod") // refactor
@@ -218,7 +220,7 @@ private fun LoginScreenContentLandscape(
 ) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Box(modifier.fillMaxSize().scrollByPlatform(), contentAlignment = Alignment.Center) {
         Column(Modifier.width(350.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Text("Login in Berte", style = MaterialTheme.typography.displayMedium)
             Spacer(Modifier.height(20.dp))
@@ -250,5 +252,14 @@ private fun LoginScreenContentLandscape(
             }
             Spacer(Modifier.height(40.dp))
         }
+    }
+}
+
+@Composable
+private fun Modifier.scrollByPlatform(): Modifier {
+    val platform = rememberPlatform()
+    return when (platform) {
+        Platform.WEB -> this
+        Platform.ANDROID -> this.verticalScroll(rememberScrollState())
     }
 }
