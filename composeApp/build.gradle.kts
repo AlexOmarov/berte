@@ -102,7 +102,7 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
-        manifestPlaceholders["appAuthRedirectScheme"] = "ru.somarov.berte:/oauth2redirect"
+        manifestPlaceholders["appAuthRedirectScheme"] = "ru.somarov.berte"
     }
     packaging {
         resources {
