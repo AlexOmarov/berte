@@ -12,6 +12,7 @@ androidx-constraintlayout = "2.1.4"
 androidx-core-ktx = "1.13.1"
 androidx-espresso-core = "3.6.1"
 androidx-material = "1.12.0"
+androidx-credentials = "1.5.0-alpha02"
 androidx-kmp-viewmodel = "2.8.0"
 androidx-kmp-navigation = "2.7.0-alpha07"
 
@@ -24,6 +25,7 @@ kotlinx-datetime = "0.6.0"
 coroutines = "1.8.1"
 openid-android = "0.11.1"
 uuid = "0.8.4"
+googleid = "1.1.1"
 
 # CI
 detekt = "1.23.6"
@@ -53,6 +55,10 @@ androidx-kmp-navigation = { module = "org.jetbrains.androidx.navigation:navigati
 
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 androidx-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
+
+googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
+androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "androidx-credentials" }
+androidx-credentials-play = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "androidx-credentials" }
 
 kotest = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }
 kotest-junit = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
