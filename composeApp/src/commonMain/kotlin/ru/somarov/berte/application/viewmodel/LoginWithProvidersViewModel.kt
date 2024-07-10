@@ -44,8 +44,25 @@ class LoginWithProvidersViewModel(private val viewModel: AppViewModel) : ViewMod
         return Unit
     }
 
-    fun loginWithYandex() {
-        return Unit
+    fun loginWithYandex(context: Any) {
+        viewModelScope.launch {
+            val res: CommonResult<String> = openAuthForResult(
+                context,
+                OAuthState(null, null),
+                OAuthSettings(
+                    authorizationEndpoint = "https://oauth.yandex.ru/authorize",
+                    tokenEndpoint = "https://oauth.yandex.ru/token",
+                    clientId = "f083805e1e10440d800ab20001b4857c",
+                    redirectUri = "ru.somarov.berte:/oauth2redirect",
+                    scope = null,
+                    tokenToService = null,
+                )
+            )
+            if (res is CommonResult.Success) {
+                viewModel.navigateTo(UIScreen.Home)
+            }
+            _result.emit(res)
+        }
     }
 
     fun loginWithTelegram() {

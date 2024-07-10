@@ -30,7 +30,7 @@ internal fun LoginWithProviders(
         Icon(painter = painterResource(Res.drawable.google), contentDescription = "Google")
     }
     FilledTonalIconButton(onClick = {
-        localViewModel.loginWithYandex()
+        localViewModel.loginWithYandex(context)
     }) {
         Icon(painter = painterResource(Res.drawable.yandex), contentDescription = "Yandex")
     }

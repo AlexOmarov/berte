@@ -89,7 +89,7 @@ class OpenAuthActivity : AppCompatActivity() {
         val state = createUUID().encodeBase64()
 
         val authRequest = authRequestBuilder
-            .setScopes(openAuthConfig.scope.split(" "))
+            .setScopes(openAuthConfig.scope?.split(" "))
             .setState(state)
             .build()
 
