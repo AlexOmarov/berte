@@ -14,7 +14,7 @@ data class Message(
     val date: Instant = Clock.System.now(),
 
     // позиция в игровом мире
-    val position: MapPosition?,
+    val position: MapPosition? = null,
 
     // в ui элементе сообщения показывается загруженная картинка
     val iconUrl: String? = null,
