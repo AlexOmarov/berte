@@ -54,6 +54,7 @@ class BackendClient(private val httpClient: HttpClient) {
     suspend fun disconnect(sessionId: Uuid): Boolean {
         TODO("implement")
     }
+
     suspend fun quitSession(request: QuitSessionRequest): QuitSessionResponse {
         TODO("implement")
     }

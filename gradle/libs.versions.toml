@@ -24,6 +24,7 @@ ktor = "3.0.0-beta-2-eap-972"
 kotlinx-datetime = "0.6.0"
 coroutines = "1.8.1"
 openid-android = "0.11.1"
+yandex-auth-android = "3.1.0"
 uuid = "0.8.4"
 googleid = "1.1.1"
 
@@ -71,6 +72,7 @@ testcontainers-junit = { group = "org.testcontainers", name = "junit-jupiter", v
 detekt-ktlint = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 
 openid-appauth-android = { module = "net.openid:appauth", version.ref = "openid-android" }
+yandex-auth-android = { module = "com.yandex.android:authsdk", version.ref = "yandex-auth-android" }
 uuid = { module = "com.benasher44:uuid", version.ref = "uuid" }
 
 #ktor

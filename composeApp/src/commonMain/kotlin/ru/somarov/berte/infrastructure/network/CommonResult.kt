@@ -16,3 +16,6 @@ fun <T> Result<T>.asCommonResult(): CommonResult<T> {
 fun <T> CommonResult<T>.getOrNull(): T? {
     return if (this is CommonResult.Success) data else null
 }
+
+fun <T> CommonResult<T>.isSuccess(): Boolean =
+    this is CommonResult.Success<T>

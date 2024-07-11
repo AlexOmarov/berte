@@ -1,22 +1,15 @@
 package ru.somarov.berte.application.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import ru.somarov.berte.UIScreen
-import ru.somarov.berte.infrastructure.network.CommonResult
 import ru.somarov.berte.infrastructure.oauth.OAuthSettings
-import ru.somarov.berte.infrastructure.oauth.OAuthState
-import ru.somarov.berte.infrastructure.oauth.openAuthForResult
 
-class LoginWithProvidersViewModel(private val viewModel: AppViewModel) : ViewModel() {
-    private val _result = MutableStateFlow<CommonResult<String>>(CommonResult.Empty())
-    val result = _result.asStateFlow()
+class LoginWithProvidersViewModel(val appViewModel: AppViewModel) : ViewModel() {
+
+    /*    private val _result = MutableStateFlow<CommonResult<TokenStore>>(CommonResult.Empty())
+        val result = _result.asStateFlow()*/
 
     fun loginWithGoogle(context: Any) {
-        login(
+        appViewModel.login(
             context,
             OAuthSettings(
                 authorizationEndpoint = "https://accounts.google.com/o/oauth2/auth",
@@ -30,15 +23,19 @@ class LoginWithProvidersViewModel(private val viewModel: AppViewModel) : ViewMod
     }
 
     fun loginWithVk() {
-        return Unit
+        return
     }
 
     fun loginWithOk() {
-        return Unit
+        return
     }
 
     fun loginWithYandex(context: Any) {
-        login(
+        appViewModel.loginWithYandex(context)
+    }
+
+    fun loginWithYandexOauth(context: Any) {
+        appViewModel.login(
             context,
             OAuthSettings(
                 authorizationEndpoint = "https://oauth.yandex.ru/authorize",
@@ -52,24 +49,10 @@ class LoginWithProvidersViewModel(private val viewModel: AppViewModel) : ViewMod
     }
 
     fun loginWithTelegram() {
-        return Unit
+        return
     }
 
     fun loginWithApple() {
-        return Unit
-    }
-
-    private fun login(context: Any, settings: OAuthSettings) {
-        viewModelScope.launch {
-            val res: CommonResult<String> = openAuthForResult(
-                context,
-                OAuthState(null, null),
-                settings
-            )
-            if (res is CommonResult.Success) {
-                viewModel.navigateTo(UIScreen.Home)
-            }
-            _result.emit(res)
-        }
+        return
     }
 }

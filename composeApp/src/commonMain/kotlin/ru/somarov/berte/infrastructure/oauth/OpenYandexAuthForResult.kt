@@ -4,12 +4,11 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import ru.somarov.berte.infrastructure.network.CommonResult
 
-internal suspend fun openAuthForResult(
+internal suspend fun openYandexAuthForResult(
     context: Any,
-    state: OAuthState,
-    settings: OAuthSettings
+    state: OAuthState
 ): CommonResult<TokenStore> {
-    startOAuth(context, state, settings)
+    startYandexAuth(context, state)
     return state.tokenFlow
         .filter {
             it is CommonResult.Success || it is CommonResult.Error

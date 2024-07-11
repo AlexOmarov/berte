@@ -23,8 +23,7 @@
             android:name=".OpenAuthActivity"
             android:exported="false"
             android:theme="@style/AppTheme.Fullscreen"
-            android:label="@string/oauth_title_activity">
-        </activity>
+            android:label="@string/oauth_title_activity"></activity>
     </application>
 
 </manifest>

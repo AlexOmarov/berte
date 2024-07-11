@@ -1,10 +1,8 @@
 package ru.somarov.berte.ui.screen
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Send
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -19,18 +17,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
-import ru.somarov.berte.UIScreen
 import ru.somarov.berte.application.viewmodel.AppViewModel
 import ru.somarov.berte.application.viewmodel.HomeScreenViewModel
 import ru.somarov.berte.ui.Messages
 
 @Composable
 fun HomeScreen(
-    navController: NavHostController,
     modifier: Modifier = Modifier,
-    viewModel: AppViewModel = viewModel(key = "app") { AppViewModel(navController) },
+    viewModel: AppViewModel,
     screenViewModel: HomeScreenViewModel = viewModel { HomeScreenViewModel() }
 ) {
     val messages by screenViewModel.messages.collectAsState()
@@ -41,14 +36,14 @@ fun HomeScreen(
     val scope = rememberCoroutineScope()
 
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
-        Row {
-            Button(onClick = { viewModel.navigateTo(UIScreen.Session) }) {
-                Text("Session")
-            }
-            Button(onClick = { viewModel.navigateTo(UIScreen.Login) }) {
-                Text("Logout")
-            }
-        }
+        /* Row {
+             Button(onClick = { viewModel.navigateTo(UIScreen.Session) }) {
+                 Text("Session")
+             }
+             Button(onClick = { viewModel.navigateTo(UIScreen.Login) }) {
+                 Text("Logout")
+             }
+         }*/
 
         Messages(messages = sorted)
 

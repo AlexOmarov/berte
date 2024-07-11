@@ -48,6 +48,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
 
             implementation(libs.openid.appauth.android)
+            implementation(libs.yandex.auth.android)
             implementation(libs.androidx.material)
 
             implementation(libs.ktor.client.okhttp)
@@ -103,6 +104,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         manifestPlaceholders["appAuthRedirectScheme"] = "ru.somarov.berte"
+        manifestPlaceholders["YANDEX_CLIENT_ID"] = "f083805e1e10440d800ab20001b4857c"
     }
     packaging {
         resources {

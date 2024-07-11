@@ -27,7 +27,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,19 +38,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import ru.somarov.berte.UIScreen
 import ru.somarov.berte.application.viewmodel.AppViewModel
-import ru.somarov.berte.application.viewmodel.LoginScreenViewModel
-import ru.somarov.berte.infrastructure.network.CommonResult
-import ru.somarov.berte.ui.ErrorBox
 import ru.somarov.berte.ui.Orientation
 import ru.somarov.berte.ui.Platform
-import ru.somarov.berte.ui.WaitBox
 import ru.somarov.berte.ui.component.LoginWithProviders
 import ru.somarov.berte.ui.rememberOrientation
 import ru.somarov.berte.ui.rememberPlatform
@@ -59,32 +50,21 @@ import ru.somarov.library.resources.Res
 import ru.somarov.library.resources.berte
 
 @Composable
-@Suppress("CyclomaticComplexMethod") // refactor
 fun LoginScreen(
-    navController: NavHostController,
-    viewModel: AppViewModel = viewModel(key = "app") { AppViewModel(navController) },
-    screenViewModel: LoginScreenViewModel = viewModel { LoginScreenViewModel() }
+    viewModel: AppViewModel,
 ) {
-    val loading by screenViewModel.loginProgress.collectAsState()
     val orientation = rememberOrientation()
-    when (val ld = loading) {
-        is CommonResult.Empty -> {
-            when (orientation) {
-                Orientation.PORTRAIT -> LoginScreenContentPortrait(
-                    viewModel = viewModel,
-                    screenViewModel = screenViewModel,
-                    modifier = Modifier.verticalScroll(
-                        rememberScrollState()
-                    )
-                )
+    when (orientation) {
+        Orientation.PORTRAIT -> LoginScreenContentPortrait(
+            viewModel = viewModel,
+            modifier = Modifier.verticalScroll(
+                rememberScrollState()
+            )
+        )
 
-                Orientation.LANDSCAPE -> LoginScreenContentLandscape(viewModel, screenViewModel)
-            }
-        }
-
-        is CommonResult.Error -> ErrorBox(ld.error.message ?: "error")
-        is CommonResult.Loading -> WaitBox()
-        is CommonResult.Success -> viewModel.navigateTo(UIScreen.Home)
+        Orientation.LANDSCAPE -> LoginScreenContentLandscape(
+            viewModel = viewModel
+        )
     }
 }
 
@@ -177,7 +157,6 @@ private fun PasswordOutlinedText(
 @Composable
 private fun LoginScreenContentPortrait(
     viewModel: AppViewModel,
-    screenViewModel: LoginScreenViewModel,
     modifier: Modifier = Modifier
 ) {
     var username by remember { mutableStateOf("") }
@@ -198,11 +177,9 @@ private fun LoginScreenContentPortrait(
         }
         Button(
             onClick = {
-                screenViewModel.viewModelScope.launch {
-                    screenViewModel.loginMock(
-                        username = username, password = password
-                    )
-                }
+                viewModel.loginWithUserAndPassword(
+                    username = username, password = password
+                )
             }, enabled = username.isNotEmpty() && password.isNotEmpty()
         ) {
             Text("Login with password")
@@ -223,7 +200,6 @@ private fun LoginScreenContentPortrait(
 @Composable
 private fun LoginScreenContentLandscape(
     viewModel: AppViewModel,
-    screenViewModel: LoginScreenViewModel,
     modifier: Modifier = Modifier
 ) {
     var username by remember { mutableStateOf("") }
@@ -245,11 +221,9 @@ private fun LoginScreenContentLandscape(
             }
             Button(
                 onClick = {
-                    screenViewModel.viewModelScope.launch {
-                        screenViewModel.loginMock(
-                            username = username, password = password
-                        )
-                    }
+                    viewModel.loginWithUserAndPassword(
+                        username = username, password = password
+                    )
                 }, enabled = username.isNotEmpty() && password.isNotEmpty()
             ) {
                 Text("Login with password")

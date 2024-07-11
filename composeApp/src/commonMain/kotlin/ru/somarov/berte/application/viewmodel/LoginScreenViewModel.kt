@@ -6,14 +6,12 @@ import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.somarov.berte.infrastructure.network.CommonResult
 import ru.somarov.berte.infrastructure.network.HttpClientProps
 import ru.somarov.berte.infrastructure.network.asCommonResult
 import ru.somarov.berte.infrastructure.network.getDefaultClient
-import ru.somarov.berte.infrastructure.network.getOrNull
 
 class LoginScreenViewModel : ViewModel() {
     private val _accessToken: MutableStateFlow<CommonResult<String>> =
@@ -26,31 +24,13 @@ class LoginScreenViewModel : ViewModel() {
         MutableStateFlow(CommonResult.Empty())
     val loginProgress = _loginProgress.asStateFlow()
 
-    suspend fun loginWithForm(username: String, password: String) {
-        loginWith(username, password, ::requestTokenByForm)
-    }
-
-    suspend fun loginWithSawedToken() {
-        _loginProgress.emit(CommonResult.Loading())
-        _loginProgress.emit(
-            runCatching {
-                ping(token = _accessToken.value.getOrNull() ?: requestTokenByCookie())
-            }.asCommonResult()
-        )
-    }
-
-    suspend fun logout() {
-        _accessToken.emit(CommonResult.Empty())
-        _loginProgress.emit(CommonResult.Empty())
-    }
-
-    suspend fun loginMock(username: String, password: String) {
-        _loginProgress.emit(CommonResult.Loading())
-        delay(LOGIN_MOCK_DELAY)
-        _loginProgress.emit(
-            CommonResult.Success("Иван Иванович")
-        )
-    }
+    /* suspend fun loginMock(username: String, password: String) {
+         _loginProgress.emit(CommonResult.Loading())
+         delay(LOGIN_MOCK_DELAY)
+         _loginProgress.emit(
+             CommonResult.Success("Иван Иванович")
+         )
+     }*/
 
     private suspend fun requestTokenByForm(username: String, password: String): String {
         _accessToken.emit(CommonResult.Loading())

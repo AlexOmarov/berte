@@ -12,9 +12,9 @@ class OAuthState(
     val cookiesStorage: CookiesStorage?,
     val tokenToServiceUrl: String?
 ) {
-    private val _tokenFlow = MutableStateFlow<CommonResult<String>>(CommonResult.Empty())
+    private val _tokenFlow = MutableStateFlow<CommonResult<TokenStore>>(CommonResult.Empty())
     val tokenFlow = _tokenFlow.asStateFlow()
-    fun setTokenWithResult(token: CommonResult<String>, done: () -> Unit) {
+    fun setTokenWithResult(token: CommonResult<TokenStore>, done: () -> Unit) {
         CoroutineScope(Dispatchers.Unconfined).launch {
             _tokenFlow.emit(token)
             done()
