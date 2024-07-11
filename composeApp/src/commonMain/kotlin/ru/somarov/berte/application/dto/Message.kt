@@ -30,13 +30,13 @@ data class Message(
     // определяет настрой истории в текущий момент меняет
     // визуальную составляющую всего экрана
     // backgorund image, tint цвета, меняет фоновую музыку
-    val storeSpirit: MessageSpirit = MessageSpiritCase.Neutral.spirit,
+    val spiritStore: MessageSpirit = MessageSpiritCase.Neutral.spirit,
 
     // определяет настрой сообщения
     // меняет визуальную составляющую сообщения
     // backgorund image, tint цвета, при действии с сообщением
     // меняет фоновую музыку
-    val messageSpirit: MessageSpirit = MessageSpiritCase.Neutral.spirit
+    val spiritMessage: MessageSpirit = MessageSpiritCase.Neutral.spirit
 )
 
 @Serializable
