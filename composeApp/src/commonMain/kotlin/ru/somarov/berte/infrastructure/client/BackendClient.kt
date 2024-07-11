@@ -3,6 +3,8 @@ package ru.somarov.berte.infrastructure.client
 import com.benasher44.uuid.Uuid
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.websocket.ClientWebSocketSession
+import kotlinx.coroutines.flow.Flow
+import ru.somarov.berte.application.dto.Message
 import ru.somarov.berte.infrastructure.client.request.CloseSessionRequest
 import ru.somarov.berte.infrastructure.client.request.CreateSessionRequest
 import ru.somarov.berte.infrastructure.client.request.GetSessionDetailsRequest
@@ -43,7 +45,7 @@ class BackendClient(private val httpClient: HttpClient) {
         TODO("implement")
     }
 
-    suspend fun connect(sessionId: Uuid): Boolean {
+    suspend fun connect(sessionId: Uuid): Flow<Message> {
         TODO("implement")
     }
 

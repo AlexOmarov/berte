@@ -38,32 +38,37 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import org.jetbrains.compose.resources.painterResource
-import ru.somarov.berte.UIScreen
-import ru.somarov.berte.application.viewmodel.AppViewModel
+import ru.somarov.berte.application.viewmodel.AuthViewModel
+import ru.somarov.berte.infrastructure.navigation.Navigation
 import ru.somarov.berte.ui.Orientation
 import ru.somarov.berte.ui.Platform
-import ru.somarov.berte.ui.component.LoginWithProviders
-import ru.somarov.berte.ui.rememberOrientation
-import ru.somarov.berte.ui.rememberPlatform
+import ru.somarov.berte.ui.element.LoginProviders
+import ru.somarov.berte.infrastructure.ui.rememberOrientation
+import ru.somarov.berte.infrastructure.ui.rememberPlatform
+import ru.somarov.berte.ui.Screen
 import ru.somarov.library.resources.Res
 import ru.somarov.library.resources.berte
 
 @Composable
 fun LoginScreen(
-    viewModel: AppViewModel,
+    viewModel: AuthViewModel,
+    controller: NavController,
 ) {
     val orientation = rememberOrientation()
     when (orientation) {
         Orientation.PORTRAIT -> LoginScreenContentPortrait(
             viewModel = viewModel,
+            controller = controller,
             modifier = Modifier.verticalScroll(
                 rememberScrollState()
             )
         )
 
         Orientation.LANDSCAPE -> LoginScreenContentLandscape(
-            viewModel = viewModel
+            viewModel = viewModel,
+            controller = controller,
         )
     }
 }
@@ -156,7 +161,8 @@ private fun PasswordOutlinedText(
 @Suppress("LongMethod", "CyclomaticComplexMethod") // refactor
 @Composable
 private fun LoginScreenContentPortrait(
-    viewModel: AppViewModel,
+    viewModel: AuthViewModel,
+    controller: NavController,
     modifier: Modifier = Modifier
 ) {
     var username by remember { mutableStateOf("") }
@@ -177,7 +183,7 @@ private fun LoginScreenContentPortrait(
         }
         Button(
             onClick = {
-                viewModel.loginWithUserAndPassword(
+                viewModel.login(
                     username = username, password = password
                 )
             }, enabled = username.isNotEmpty() && password.isNotEmpty()
@@ -187,10 +193,10 @@ private fun LoginScreenContentPortrait(
 
         Spacer(Modifier.height(20.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            LoginWithProviders(viewModel)
+            LoginProviders(viewModel)
         }
         Spacer(Modifier.height(20.dp))
-        TextButton(onClick = { viewModel.navigateTo(UIScreen.Register) }) {
+        TextButton(onClick = { Navigation.to(Screen.Register, controller) }) {
             Text("Create account")
         }
     }
@@ -199,7 +205,8 @@ private fun LoginScreenContentPortrait(
 @Suppress("LongMethod", "CyclomaticComplexMethod") // refactor
 @Composable
 private fun LoginScreenContentLandscape(
-    viewModel: AppViewModel,
+    viewModel: AuthViewModel,
+    controller: NavController,
     modifier: Modifier = Modifier
 ) {
     var username by remember { mutableStateOf("") }
@@ -221,7 +228,7 @@ private fun LoginScreenContentLandscape(
             }
             Button(
                 onClick = {
-                    viewModel.loginWithUserAndPassword(
+                    viewModel.login(
                         username = username, password = password
                     )
                 }, enabled = username.isNotEmpty() && password.isNotEmpty()
@@ -230,11 +237,11 @@ private fun LoginScreenContentLandscape(
             }
             Spacer(Modifier.height(20.dp))
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                LoginWithProviders(viewModel)
+                LoginProviders(viewModel)
             }
             Spacer(Modifier.height(20.dp))
 
-            TextButton(onClick = { viewModel.navigateTo(UIScreen.Register) }) {
+            TextButton(onClick = { Navigation.to(Screen.Register, controller) }) {
                 Text("Create account")
             }
             Spacer(Modifier.height(40.dp))

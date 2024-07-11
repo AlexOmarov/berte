@@ -12,8 +12,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import ru.somarov.berte.application.dto.AuthUser
-import ru.somarov.berte.infrastructure.oauth.TokenStore
+import ru.somarov.berte.application.dto.auth.TokenInfo
 
 object YandexApi {
 
@@ -33,7 +32,7 @@ object YandexApi {
         }
     }
 
-    suspend fun getUserInfo(token: TokenStore): YandexUser {
+    suspend fun getUserInfo(token: TokenInfo): YandexUser {
         val response = createHttpClient().get("https://login.yandex.ru/info") {
             header("Authorization", "OAuth ${token.value}")
         }
@@ -44,14 +43,6 @@ object YandexApi {
             )
         return response.body<YandexUser>()
     }
-}
-
-fun YandexUser.toAuthUser(): AuthUser {
-    return AuthUser(
-        id = "yandex-$id",
-        username = this.displayName,
-        email = this.emails,
-    )
 }
 
 @Serializable

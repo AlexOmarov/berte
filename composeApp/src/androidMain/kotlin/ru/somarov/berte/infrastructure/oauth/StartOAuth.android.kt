@@ -5,8 +5,8 @@ import ru.somarov.berte.OpenAuthActivity
 
 actual fun startOAuth(
     context: Any,
-    state: OAuthState,
-    settings: OAuthSettings
+    state: TokenStore,
+    settings: OAuthSettings?
 ) {
     OpenAuthActivity.start(context as Context, state, settings)
 }

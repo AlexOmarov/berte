@@ -4,17 +4,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import ru.somarov.berte.UIScreen
-import ru.somarov.berte.application.viewmodel.AppViewModel
+import androidx.navigation.NavController
+import ru.somarov.berte.infrastructure.navigation.Navigation
+import ru.somarov.berte.ui.Screen
 
 @Composable
 fun RegisterScreen(
-    viewModel: AppViewModel,
-    modifier: Modifier = Modifier,
+    controller: NavController
 ) {
     Column {
-        Button(onClick = { viewModel.navigateTo(UIScreen.Home) }) {
+        Button(onClick = { Navigation.to(Screen.Home, controller) }) {
             Text("Home")
         }
         Text("Register")

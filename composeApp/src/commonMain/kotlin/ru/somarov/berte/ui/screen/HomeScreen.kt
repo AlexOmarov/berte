@@ -1,6 +1,7 @@
 package ru.somarov.berte.ui.screen
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Send
 import androidx.compose.material3.Icon
@@ -18,14 +19,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
-import ru.somarov.berte.application.viewmodel.AppViewModel
+import ru.somarov.berte.application.viewmodel.AuthViewModel
 import ru.somarov.berte.application.viewmodel.HomeScreenViewModel
-import ru.somarov.berte.ui.Messages
+import ru.somarov.berte.ui.element.Message
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: AppViewModel,
+    viewModel: AuthViewModel,
     screenViewModel: HomeScreenViewModel = viewModel { HomeScreenViewModel() }
 ) {
     val messages by screenViewModel.messages.collectAsState()
@@ -36,16 +37,18 @@ fun HomeScreen(
     val scope = rememberCoroutineScope()
 
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
-        /* Row {
-             Button(onClick = { viewModel.navigateTo(UIScreen.Session) }) {
-                 Text("Session")
-             }
-             Button(onClick = { viewModel.navigateTo(UIScreen.Login) }) {
-                 Text("Logout")
-             }
-         }*/
-
-        Messages(messages = sorted)
+        LazyColumn(
+            modifier = modifier.weight(1.0f),
+            reverseLayout = true,
+        ) {
+            sorted.forEach {
+                item {
+                    Message(message = it) {
+                        // TODO: open message details
+                    }
+                }
+            }
+        }
 
         OutlinedTextField(
             value = value,

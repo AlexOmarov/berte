@@ -1,7 +1,6 @@
 package ru.somarov.berte.infrastructure.network
 
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpRedirect
 import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.HttpTimeout
@@ -60,8 +59,6 @@ fun getDefaultClient(props: HttpClientProps): HttpClient {
         }
     }
 }
-
-expect fun getEngine(): HttpClientEngine
 
 data class HttpClientProps(
     val deflateFactor: Float = 1.0F,

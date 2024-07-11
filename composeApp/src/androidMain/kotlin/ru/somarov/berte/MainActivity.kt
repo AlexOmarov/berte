@@ -17,7 +17,7 @@ class MainActivity : FragmentActivity() {
                     .DisposeOnViewTreeLifecycleDestroyed
             )
             setContent {
-                AppStarter()
+                App()
             }
         }
         setContentView(view)

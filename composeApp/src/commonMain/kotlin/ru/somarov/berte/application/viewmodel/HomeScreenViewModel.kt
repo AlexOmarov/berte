@@ -8,13 +8,13 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import ru.somarov.berte.application.dto.Message
-import ru.somarov.berte.application.dto.MessageType
+import ru.somarov.berte.application.dto.message.MessageType
 
 class HomeScreenViewModel : ViewModel() {
     private val _messages = MutableStateFlow<List<Message>>(emptyList())
     val messages = _messages.asStateFlow()
 
-    suspend fun sendMessage(text: String, messageType: MessageType = MessageType.OutMessage) {
+    suspend fun sendMessage(text: String, messageType: MessageType = MessageType.OUT) {
         val message = Message(text, messageType)
         val m = _messages.value.toMutableList()
         m.add(message)
@@ -26,8 +26,8 @@ class HomeScreenViewModel : ViewModel() {
         messages
             .debounce(DEBOUNCE_PERIOD)
             .onEach {
-                if (it.isNotEmpty() && it.last().messageType == MessageType.OutMessage) {
-                    sendMessage("get message from server", MessageType.InMessage)
+                if (it.isNotEmpty() && it.last().messageType == MessageType.OUT) {
+                    sendMessage("get message from server", MessageType.IN)
                 }
             }.launchIn(viewModelScope)
     }
