@@ -1,4 +1,4 @@
-package ru.somarov.berte.infrastructure.network.oauth
+package ru.somarov.berte.infrastructure.oauth
 
 import io.ktor.client.plugins.cookies.CookiesStorage
 import kotlinx.coroutines.CoroutineScope

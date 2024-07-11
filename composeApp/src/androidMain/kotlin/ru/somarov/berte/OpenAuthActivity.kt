@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import com.benasher44.uuid.uuid4
 import io.ktor.util.encodeBase64
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -20,10 +21,9 @@ import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.AuthorizationService
 import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ResponseTypeValues
-import ru.somarov.berte.infrastructure.createUUID
 import ru.somarov.berte.infrastructure.network.CommonResult
-import ru.somarov.berte.infrastructure.network.oauth.OAuthSettings
-import ru.somarov.berte.infrastructure.network.oauth.OAuthState
+import ru.somarov.berte.infrastructure.oauth.OAuthSettings
+import ru.somarov.berte.infrastructure.oauth.OAuthState
 import ru.somarov.berte.ui.WaitBox
 
 class OpenAuthActivity : AppCompatActivity() {
@@ -86,7 +86,7 @@ class OpenAuthActivity : AppCompatActivity() {
             /* responseType = */ ResponseTypeValues.CODE,
             /* redirectUri = */ Uri.parse(openAuthConfig.redirectUri)
         )
-        val state = createUUID().encodeBase64()
+        val state = uuid4().toString().encodeBase64()
 
         val authRequest = authRequestBuilder
             .setScopes(openAuthConfig.scope?.split(" "))

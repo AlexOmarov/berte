@@ -30,13 +30,13 @@ data class Message(
     // определяет настрой истории в текущий момент меняет
     // визуальную составляющую всего экрана
     // backgorund image, tint цвета, меняет фоновую музыку
-    val spiritStore: MessageSpirit = MessageSpiritCase.Neutral.spirit,
+    val spiritStore: MessageSpiritInfo = MessageSpirit.Neutral.spirit,
 
     // определяет настрой сообщения
     // меняет визуальную составляющую сообщения
     // backgorund image, tint цвета, при действии с сообщением
     // меняет фоновую музыку
-    val spiritMessage: MessageSpirit = MessageSpiritCase.Neutral.spirit
+    val spiritMessage: MessageSpiritInfo = MessageSpirit.Neutral.spirit
 )
 
 @Serializable
@@ -57,7 +57,7 @@ enum class MessageAnimation {
 }
 
 @Serializable
-data class MessageSpirit(
+data class MessageSpiritInfo(
     val background: String,
     val tint: String,
     val music: String? = null,
@@ -65,45 +65,45 @@ data class MessageSpirit(
 
 // предустановленные состояния
 @Serializable
-enum class MessageSpiritCase(val spirit: MessageSpirit) {
+enum class MessageSpirit(val spirit: MessageSpiritInfo) {
     Catastrophic(
-        MessageSpirit(
+        MessageSpiritInfo(
             background = "http://berte.ru/store/catastrophic.png",
             tint = "D0D0D0"
         )
     ),
     Critical(
-        MessageSpirit(
+        MessageSpiritInfo(
             background = "http://berte.ru/store/critical.png",
             tint = "D0A0A0"
         )
     ),
     Dangerous(
-        MessageSpirit(
+        MessageSpiritInfo(
             background = "http://berte.ru/store/dangerous.png",
             tint = "A0A0A0"
         )
     ),
     Neutral(
-        MessageSpirit(
+        MessageSpiritInfo(
             background = "http://berte.ru/store/neutral.png",
             tint = "505050"
         )
     ),
     Favorable(
-        MessageSpirit(
+        MessageSpiritInfo(
             background = "http://berte.ru/store/favorable.png",
             tint = "50A070"
         )
     ),
     Good(
-        MessageSpirit(
+        MessageSpiritInfo(
             background = "http://berte.ru/store/good.png",
             tint = "50D070"
         )
     ),
     Excellent(
-        MessageSpirit(
+        MessageSpiritInfo(
             background = "http://berte.ru/store/excellent.png",
             tint = "50D0D0"
         )

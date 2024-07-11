@@ -1,4 +1,4 @@
-package ru.somarov.berte.infrastructure.network.oauth
+package ru.somarov.berte.infrastructure.oauth
 
 import android.content.Context
 import ru.somarov.berte.OpenAuthActivity

@@ -1,4 +1,4 @@
-package ru.somarov.berte.infrastructure.network.oauth
+package ru.somarov.berte.infrastructure.oauth
 
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
