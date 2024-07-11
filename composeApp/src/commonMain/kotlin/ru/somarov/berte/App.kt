@@ -180,12 +180,12 @@ fun UIAppBar(
                         contentDescription = user.username,
                     )
                 }
-                IconButton(onClick = logout) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Outlined.ExitToApp,
-                        contentDescription = "logout",
-                    )
-                }
+            }
+            IconButton(onClick = logout) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.ExitToApp,
+                    contentDescription = "logout",
+                )
             }
         },
         modifier = modifier,
