@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.jetbrains.compose.resources.painterResource
 import ru.somarov.berte.application.viewmodel.AuthViewModel
-import ru.somarov.berte.infrastructure.navigation.Navigation
+import ru.somarov.berte.infrastructure.navigation.navigateTo
 import ru.somarov.berte.ui.Orientation
 import ru.somarov.berte.ui.Platform
 import ru.somarov.berte.ui.element.LoginProviders
@@ -196,7 +196,7 @@ private fun LoginScreenContentPortrait(
             LoginProviders(viewModel)
         }
         Spacer(Modifier.height(20.dp))
-        TextButton(onClick = { Navigation.to(Screen.Register, controller) }) {
+        TextButton(onClick = { controller.navigateTo(Screen.Register) }) {
             Text("Create account")
         }
     }
@@ -241,7 +241,7 @@ private fun LoginScreenContentLandscape(
             }
             Spacer(Modifier.height(20.dp))
 
-            TextButton(onClick = { Navigation.to(Screen.Register, controller) }) {
+            TextButton(onClick = { controller.navigateTo(Screen.Register) }) {
                 Text("Create account")
             }
             Spacer(Modifier.height(40.dp))

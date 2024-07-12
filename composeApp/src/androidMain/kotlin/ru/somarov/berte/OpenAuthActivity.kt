@@ -11,10 +11,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.lifecycleScope
-import com.benasher44.uuid.uuid4
 import com.yandex.authsdk.YandexAuthLoginOptions
 import com.yandex.authsdk.YandexAuthOptions
 import com.yandex.authsdk.YandexAuthResult
+import com.yandex.authsdk.YandexAuthResult.Cancelled
+import com.yandex.authsdk.YandexAuthResult.Failure
+import com.yandex.authsdk.YandexAuthResult.Success
 import com.yandex.authsdk.YandexAuthSdk
 import com.yandex.authsdk.internal.strategy.LoginType
 import io.ktor.util.encodeBase64
@@ -30,51 +32,98 @@ import net.openid.appauth.AuthorizationService
 import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ResponseTypeValues
 import ru.somarov.berte.application.dto.auth.TokenInfo
-import ru.somarov.berte.application.dto.auth.TokenProvider
+import ru.somarov.berte.application.dto.auth.TokenProvider.GOOGLE
+import ru.somarov.berte.application.dto.auth.TokenProvider.YANDEX
 import ru.somarov.berte.infrastructure.network.CommonResult
 import ru.somarov.berte.infrastructure.network.getOrNull
 import ru.somarov.berte.infrastructure.oauth.CanceledRequestException
 import ru.somarov.berte.infrastructure.oauth.NotFoundException
 import ru.somarov.berte.infrastructure.oauth.OAuthSettings
 import ru.somarov.berte.infrastructure.oauth.TokenStore
-import ru.somarov.berte.infrastructure.oauth.TokenStore.*
+import ru.somarov.berte.infrastructure.uuid.UUID
 import ru.somarov.berte.ui.element.WaitBox
 
 class OpenAuthActivity : AppCompatActivity() {
-    private fun setStateAndExit(currentState: TokenStore, result: CommonResult<TokenInfo>) {
-        CoroutineScope(Dispatchers.Unconfined).launch {
-            currentState.setToken(result.getOrNull())
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val json = intent.getStringExtra("SETTINGS")!!
+
+        start(Json.decodeFromString<OAuthSettings>(json))
+
+        val view = ComposeView(this).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent { MaterialTheme { WaitBox() } }
         }
+
+        setContentView(view)
+    }
+
+    private fun start(config: OAuthSettings) {
+        when (config.provider) {
+            YANDEX -> startYandex()
+            else -> startGoogle(config)
+        }
+    }
+
+    private fun startGoogle(config: OAuthSettings) {
+        val serviceConfig = AuthorizationServiceConfiguration(
+            Uri.parse(config.authorizationEndpoint),
+            Uri.parse(config.tokenEndpoint)
+        )
+        val authRequestBuilder = AuthorizationRequest.Builder(
+            /* configuration = */ serviceConfig,
+            /* clientId = */ config.clientId,
+            /* responseType = */ ResponseTypeValues.CODE,
+            /* redirectUri = */ Uri.parse(config.redirectUri)
+        )
+        val state = UUID.generate().toString().encodeBase64()
+
+        val authRequest = authRequestBuilder
+            .also { builder ->
+                config.scope?.let {
+                    builder.setScopes(it.split(" "))
+                }
+            }
+            .setState(state)
+            .build()
+
+        val authService = AuthorizationService(this)
+        val authIntent = authService.getAuthorizationRequestIntent(authRequest)
+
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            handleOAuthResult(it)
+        }.launch(authIntent)
+    }
+
+    private fun startYandex() {
+        val loginOptions = YandexAuthLoginOptions(loginType = LoginType.NATIVE)
+        val sdk = YandexAuthSdk.create(YandexAuthOptions(this.applicationContext, false))
+        val yandexLauncher = registerForActivityResult(sdk.contract) { handleYandexResult(it) }
+        yandexLauncher.launch(loginOptions)
     }
 
     private fun handleYandexResult(result: YandexAuthResult) {
         val state = staticState ?: return
         staticState = null
         when (result) {
-            is YandexAuthResult.Success -> {
-                val info = TokenInfo(result.token.value, result.token.expiresIn, TokenProvider.YANDEX)
-                lifecycleScope.launch {
-                    setStateAndExit(state, CommonResult.Success(info))
-                }
+            is Success -> {
+                val info = TokenInfo(result.token.value, result.token.expiresIn, YANDEX)
+                lifecycleScope.launch { setStateAndExit(state, CommonResult.Success(info)) }
             }
 
-            is YandexAuthResult.Failure ->
-                setStateAndExit(state, CommonResult.Error(result.exception))
+            is Failure -> setStateAndExit(state, CommonResult.Error(result.exception))
 
-            YandexAuthResult.Cancelled ->
-                setStateAndExit(state, CommonResult.Error(CanceledRequestException()))
+            Cancelled -> setStateAndExit(state, CommonResult.Error(CanceledRequestException()))
         }
     }
 
-    private fun startYandex() {
-        val loginOptions = YandexAuthLoginOptions(
-            loginType = LoginType.NATIVE
-        )
-        val sdk: YandexAuthSdk =
-            YandexAuthSdk.create(YandexAuthOptions(context = this.applicationContext, false))
-        val yandexLauncher =
-            registerForActivityResult(sdk.contract) { result -> handleYandexResult(result) }
-        yandexLauncher.launch(loginOptions)
+    private fun setStateAndExit(currentState: TokenStore, result: CommonResult<TokenInfo>) {
+        CoroutineScope(Dispatchers.Unconfined).launch {
+            currentState.setToken(result.getOrNull())
+            finish()
+        }
     }
 
     @Suppress("CyclomaticComplexMethod")
@@ -99,7 +148,7 @@ class OpenAuthActivity : AppCompatActivity() {
                 if (response != null) {
                     val token = response.accessToken
                     if (!token.isNullOrEmpty()) {
-                        setStateAndExit(state, CommonResult.Success(TokenInfo(token, null, TokenProvider.GOOGLE)))
+                        setStateAndExit(state, CommonResult.Success(TokenInfo(token, null, GOOGLE)))
                     } else {
                         setStateAndExit(state, CommonResult.Error(NotFoundException()))
                     }
@@ -113,85 +162,12 @@ class OpenAuthActivity : AppCompatActivity() {
         }
     }
 
-    private val resultOauth =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result: ActivityResult ->
-            handleOAuthResult(result)
-        }
-
-    private fun start(openAuthConfig: OAuthSettings) {
-        val serviceConfig = AuthorizationServiceConfiguration(
-            Uri.parse(openAuthConfig.authorizationEndpoint),
-            Uri.parse(openAuthConfig.tokenEndpoint)
-        )
-        val authRequestBuilder = AuthorizationRequest.Builder(
-            /* configuration = */ serviceConfig,
-            /* clientId = */ openAuthConfig.clientId,
-            /* responseType = */ ResponseTypeValues.CODE,
-            /* redirectUri = */ Uri.parse(openAuthConfig.redirectUri)
-        )
-        val state = uuid4().toString().encodeBase64()
-
-        val authRequest = authRequestBuilder
-            .also { builder ->
-                openAuthConfig.scope?.let {
-                    builder.setScopes(it.split(" "))
-                }
-            }
-            .setState(state)
-            .build()
-
-        val authService = AuthorizationService(this)
-        val authIntent = authService.getAuthorizationRequestIntent(authRequest)
-        resultOauth.launch(authIntent)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val json = intent.getStringExtra("SETTINGS")
-        val yandex = intent.getBooleanExtra("YANDEX", false)
-
-        when {
-            json != null -> {
-                start(Json.decodeFromString<OAuthSettings>(json))
-            }
-
-            yandex -> {
-                startYandex()
-            }
-        }
-        val view = ComposeView(this).apply {
-            setViewCompositionStrategy(
-                ViewCompositionStrategy
-                    .DisposeOnViewTreeLifecycleDestroyed
-            )
-
-            setContent {
-                MaterialTheme {
-                    WaitBox()
-                }
-            }
-        }
-        setContentView(view)
-    }
-
     companion object {
         fun start(context: Context, state: TokenStore, settings: OAuthSettings?) {
             staticState = state
-            val json = Json.encodeToString(settings)
             context.startActivity(
                 Intent(context, OpenAuthActivity::class.java).also {
-                    it.putExtra("SETTINGS", json)
-                }
-            )
-        }
-
-        fun startYandex(context: Context, state: TokenStore) {
-            staticState = state
-            context.startActivity(
-                Intent(context, OpenAuthActivity::class.java).also {
-                    it.putExtra("YANDEX", true)
+                    it.putExtra("SETTINGS", Json.encodeToString(settings))
                 }
             )
         }

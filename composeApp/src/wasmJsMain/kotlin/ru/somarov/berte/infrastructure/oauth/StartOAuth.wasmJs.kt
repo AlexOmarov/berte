@@ -5,5 +5,5 @@ actual fun startOAuth(
     state: TokenStore,
     settings: OAuthSettings?
 ) {
-    return Unit
+    println("$state $context $settings")
 }

@@ -16,8 +16,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.benasher44.uuid.uuid4
 import ru.somarov.berte.application.viewmodel.AuthViewModel
+import ru.somarov.berte.infrastructure.uuid.UUID
 import ru.somarov.berte.ui.Screen
 import ru.somarov.berte.ui.screen.HomeScreen
 import ru.somarov.berte.ui.screen.LoginScreen
@@ -30,7 +30,7 @@ fun Root(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
-    val viewModel = viewModel(key = uuid4().toString()) { AuthViewModel(navController) }
+    val viewModel = viewModel(key = UUID.generate().toString()) { AuthViewModel(navController) }
 
     val user by viewModel.authUser.collectAsState()
     var openUser by remember { mutableStateOf(false) }
@@ -76,7 +76,7 @@ fun Root(
                             Screen.Login -> LoginScreen(viewModel = viewModel, navController)
                             Screen.Home -> HomeScreen(viewModel = viewModel)
                             Screen.Register -> RegisterScreen(controller = navController)
-                            Screen.Session -> SessionScreen(viewModel = viewModel)
+                            Screen.Session -> SessionScreen()
                         }
                     }
                 }
