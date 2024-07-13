@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -40,16 +41,23 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.jetbrains.compose.resources.painterResource
+import ru.somarov.berte.application.dto.auth.Provider
 import ru.somarov.berte.application.viewmodel.AuthViewModel
 import ru.somarov.berte.infrastructure.navigation.navigateTo
-import ru.somarov.berte.ui.Orientation
-import ru.somarov.berte.ui.Platform
-import ru.somarov.berte.ui.element.LoginProviders
+import ru.somarov.berte.infrastructure.ui.rememberContext
 import ru.somarov.berte.infrastructure.ui.rememberOrientation
 import ru.somarov.berte.infrastructure.ui.rememberPlatform
-import ru.somarov.berte.ui.Screen
+import ru.somarov.berte.ui.Orientation
+import ru.somarov.berte.ui.Platform
+import ru.somarov.berte.ui.Route
 import ru.somarov.library.resources.Res
+import ru.somarov.library.resources.apple
 import ru.somarov.library.resources.berte
+import ru.somarov.library.resources.google
+import ru.somarov.library.resources.ok
+import ru.somarov.library.resources.telegram
+import ru.somarov.library.resources.vk
+import ru.somarov.library.resources.yandex
 
 @Composable
 fun LoginScreen(
@@ -196,7 +204,7 @@ private fun LoginScreenContentPortrait(
             LoginProviders(viewModel)
         }
         Spacer(Modifier.height(20.dp))
-        TextButton(onClick = { controller.navigateTo(Screen.Register) }) {
+        TextButton(onClick = { controller.navigateTo(Route.Register) }) {
             Text("Create account")
         }
     }
@@ -241,7 +249,7 @@ private fun LoginScreenContentLandscape(
             }
             Spacer(Modifier.height(20.dp))
 
-            TextButton(onClick = { controller.navigateTo(Screen.Register) }) {
+            TextButton(onClick = { controller.navigateTo(Route.Register) }) {
                 Text("Create account")
             }
             Spacer(Modifier.height(40.dp))
@@ -255,5 +263,29 @@ private fun Modifier.scrollByPlatform(): Modifier {
     return when (platform) {
         Platform.WEB -> this
         Platform.ANDROID -> this.verticalScroll(rememberScrollState())
+    }
+}
+
+@Composable
+internal fun LoginProviders(viewModel: AuthViewModel) {
+    val context = rememberContext()
+
+    FilledTonalIconButton(onClick = { viewModel.login(context, Provider.GOOGLE) }) {
+        Icon(painter = painterResource(Res.drawable.google), contentDescription = "Google")
+    }
+    FilledTonalIconButton(onClick = { viewModel.login(context, Provider.YANDEX) }) {
+        Icon(painter = painterResource(Res.drawable.yandex), contentDescription = "Yandex")
+    }
+    FilledTonalIconButton(onClick = { viewModel.login(context, Provider.APPLE) }) {
+        Icon(painter = painterResource(Res.drawable.apple), contentDescription = "Apple")
+    }
+    FilledTonalIconButton(onClick = { viewModel.login(context, Provider.OK) }) {
+        Icon(painter = painterResource(Res.drawable.ok), contentDescription = "OK")
+    }
+    FilledTonalIconButton(onClick = { viewModel.login(context, Provider.TELEGRAM) }) {
+        Icon(painter = painterResource(Res.drawable.telegram), contentDescription = "Telegram")
+    }
+    FilledTonalIconButton(onClick = { viewModel.login(context, Provider.VK) }) {
+        Icon(painter = painterResource(Res.drawable.vk), contentDescription = "VK")
     }
 }

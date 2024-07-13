@@ -4,9 +4,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.ui.graphics.vector.ImageVector
 
-enum class Screen(val info: ScreenInfo) {
+enum class Route(val info: RouteInfo) {
     Login(
-        ScreenInfo(
+        RouteInfo(
             id = "login",
             title = "Login",
             icon = Icons.Outlined.Home,
@@ -15,7 +15,7 @@ enum class Screen(val info: ScreenInfo) {
         )
     ),
     Home(
-        ScreenInfo(
+        RouteInfo(
             id = "home",
             title = "Home",
             icon = Icons.Outlined.Home,
@@ -24,7 +24,7 @@ enum class Screen(val info: ScreenInfo) {
         )
     ),
     Register(
-        ScreenInfo(
+        RouteInfo(
             id = "register",
             title = "Register",
             icon = Icons.Outlined.Home,
@@ -33,20 +33,20 @@ enum class Screen(val info: ScreenInfo) {
         )
     ),
     Session(
-        ScreenInfo(
+        RouteInfo(
             id = "session",
             title = "Session",
             icon = Icons.Outlined.Home,
             root = false,
             fullscreen = false
         )
-    ),
-}
+    );
 
-data class ScreenInfo(
-    val id: String,
-    val title: String,
-    val icon: ImageVector,
-    val root: Boolean,
-    val fullscreen: Boolean
-)
+    data class RouteInfo(
+        val id: String,
+        val title: String,
+        val icon: ImageVector,
+        val root: Boolean,
+        val fullscreen: Boolean
+    )
+}

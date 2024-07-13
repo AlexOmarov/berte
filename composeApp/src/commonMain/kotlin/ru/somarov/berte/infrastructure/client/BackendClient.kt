@@ -3,7 +3,7 @@ package ru.somarov.berte.infrastructure.client
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.websocket.ClientWebSocketSession
 import kotlinx.coroutines.flow.Flow
-import ru.somarov.berte.application.dto.Message
+import ru.somarov.berte.application.dto.message.Message
 import ru.somarov.berte.infrastructure.client.request.CloseSessionRequest
 import ru.somarov.berte.infrastructure.client.request.CreateSessionRequest
 import ru.somarov.berte.infrastructure.client.request.GetSessionDetailsRequest
@@ -20,10 +20,9 @@ import ru.somarov.berte.infrastructure.client.response.JoinSessionResponse
 import ru.somarov.berte.infrastructure.client.response.QuitSessionResponse
 import ru.somarov.berte.infrastructure.client.response.RegistrationResponse
 import ru.somarov.berte.infrastructure.client.response.SendMessageResponse
-import ru.somarov.berte.infrastructure.uuid.UUID
 
 class BackendClient(private val httpClient: HttpClient) {
-    private val sessions = mutableMapOf<UUID, ClientWebSocketSession>()
+    private val sessions = mutableMapOf<String, ClientWebSocketSession>()
 
     suspend fun register(request: RegistrationRequest): RegistrationResponse {
         TODO("implement")
@@ -45,7 +44,7 @@ class BackendClient(private val httpClient: HttpClient) {
         TODO("implement")
     }
 
-    fun connect(sessionId: UUID): Flow<Message> {
+    fun connect(sessionId: String): Flow<Message> {
         TODO("implement")
     }
 

@@ -1,4 +1,4 @@
-package ru.somarov.berte
+package ru.somarov.berte.ui
 
 import android.content.Context
 import android.content.Intent
@@ -31,26 +31,26 @@ import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.AuthorizationService
 import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ResponseTypeValues
-import ru.somarov.berte.application.dto.auth.TokenInfo
-import ru.somarov.berte.application.dto.auth.TokenProvider.GOOGLE
-import ru.somarov.berte.application.dto.auth.TokenProvider.YANDEX
+import ru.somarov.berte.application.dto.auth.Provider
+import ru.somarov.berte.application.dto.auth.Provider.YANDEX
+import ru.somarov.berte.application.dto.auth.Token
 import ru.somarov.berte.infrastructure.network.CommonResult
 import ru.somarov.berte.infrastructure.network.getOrNull
-import ru.somarov.berte.infrastructure.oauth.CanceledRequestException
 import ru.somarov.berte.infrastructure.oauth.NotFoundException
 import ru.somarov.berte.infrastructure.oauth.OAuthSettings
 import ru.somarov.berte.infrastructure.oauth.TokenStore
-import ru.somarov.berte.infrastructure.uuid.UUID
-import ru.somarov.berte.ui.element.WaitBox
+import ru.somarov.berte.infrastructure.uuid.createUniqueString
+import ru.somarov.berte.ui.screen.element.WaitBox
+import kotlin.coroutines.cancellation.CancellationException
 
-class OpenAuthActivity : AppCompatActivity() {
+class OAuthStarterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val json = intent.getStringExtra("SETTINGS")!!
+        val settings = intent.getStringExtra("SETTINGS")!!
 
-        start(Json.decodeFromString<OAuthSettings>(json))
+        start(Json.decodeFromString<OAuthSettings>(settings))
 
         val view = ComposeView(this).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -78,7 +78,7 @@ class OpenAuthActivity : AppCompatActivity() {
             /* responseType = */ ResponseTypeValues.CODE,
             /* redirectUri = */ Uri.parse(config.redirectUri)
         )
-        val state = UUID.generate().toString().encodeBase64()
+        val state = createUniqueString().encodeBase64()
 
         val authRequest = authRequestBuilder
             .also { builder ->
@@ -109,20 +109,13 @@ class OpenAuthActivity : AppCompatActivity() {
         staticState = null
         when (result) {
             is Success -> {
-                val info = TokenInfo(result.token.value, result.token.expiresIn, YANDEX)
+                val info = Token(result.token.value, result.token.expiresIn, YANDEX)
                 lifecycleScope.launch { setStateAndExit(state, CommonResult.Success(info)) }
             }
 
             is Failure -> setStateAndExit(state, CommonResult.Error(result.exception))
 
-            Cancelled -> setStateAndExit(state, CommonResult.Error(CanceledRequestException()))
-        }
-    }
-
-    private fun setStateAndExit(currentState: TokenStore, result: CommonResult<TokenInfo>) {
-        CoroutineScope(Dispatchers.Unconfined).launch {
-            currentState.setToken(result.getOrNull())
-            finish()
+            Cancelled -> setStateAndExit(state, CommonResult.Error(CancellationException()))
         }
     }
 
@@ -148,7 +141,14 @@ class OpenAuthActivity : AppCompatActivity() {
                 if (response != null) {
                     val token = response.accessToken
                     if (!token.isNullOrEmpty()) {
-                        setStateAndExit(state, CommonResult.Success(TokenInfo(token, null, GOOGLE)))
+                        setStateAndExit(
+                            state, CommonResult.Success(
+                                Token(
+                                    token, null,
+                                    Provider.GOOGLE
+                                )
+                            )
+                        )
                     } else {
                         setStateAndExit(state, CommonResult.Error(NotFoundException()))
                     }
@@ -158,7 +158,14 @@ class OpenAuthActivity : AppCompatActivity() {
                 }
             }
         } else {
-            setStateAndExit(state, CommonResult.Error(CanceledRequestException()))
+            setStateAndExit(state, CommonResult.Error(CancellationException()))
+        }
+    }
+
+    private fun setStateAndExit(currentState: TokenStore, result: CommonResult<Token>) {
+        CoroutineScope(Dispatchers.Unconfined).launch {
+            currentState.set(result.getOrNull())
+            finish()
         }
     }
 
@@ -166,7 +173,7 @@ class OpenAuthActivity : AppCompatActivity() {
         fun start(context: Context, state: TokenStore, settings: OAuthSettings?) {
             staticState = state
             context.startActivity(
-                Intent(context, OpenAuthActivity::class.java).also {
+                Intent(context, OAuthStarterActivity::class.java).also {
                     it.putExtra("SETTINGS", Json.encodeToString(settings))
                 }
             )

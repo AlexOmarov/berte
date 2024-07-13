@@ -9,44 +9,33 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import ru.somarov.berte.application.dto.auth.AuthUser
-import ru.somarov.berte.application.dto.auth.TokenInfo
-import ru.somarov.berte.application.dto.auth.TokenProvider
+import ru.somarov.berte.application.dto.auth.Provider
+import ru.somarov.berte.application.dto.auth.Token
+import ru.somarov.berte.application.dto.auth.User
 import ru.somarov.berte.infrastructure.navigation.navigateTo
 import ru.somarov.berte.infrastructure.oauth.OAuthSettings
 import ru.somarov.berte.infrastructure.oauth.TokenStore
 import ru.somarov.berte.infrastructure.oauth.startOAuth
-import ru.somarov.berte.infrastructure.uuid.UUID
-import ru.somarov.berte.ui.Screen
+import ru.somarov.berte.infrastructure.uuid.createUniqueString
+import ru.somarov.berte.ui.Route
 
 class AuthViewModel(private val controller: NavHostController) : ViewModel() {
 
-    private val _authUser = MutableStateFlow<AuthUser?>(null)
+    private val _authUser = MutableStateFlow<User?>(null)
     private val _state = TokenStore()
-    val authUser = _authUser.asStateFlow()
+    val user = _authUser.asStateFlow()
 
     init {
         _state.tokenFlow
             .filterNotNull()
             .onEach {
-                _authUser.emit(
-                    AuthUser(
-                        id = UUID.generate().toString(),
-                        username = "",
-                        email = emptyList(),
-                        it
-                    )
-                )
+                _authUser.emit(getUserFromToken(it))
+                controller.navigateTo(Route.Home)
             }
-            .launchIn(viewModelScope)
-
-        authUser
-            .filterNotNull()
-            .onEach { controller.navigateTo(Screen.Home) }
             .launchIn(viewModelScope)
     }
 
-    fun login(context: Any, provider: TokenProvider) {
+    fun login(context: Any, provider: Provider) {
         viewModelScope.launch {
             val settings = getProviderSettings(provider)
             startOAuth(context, _state, settings)
@@ -55,11 +44,11 @@ class AuthViewModel(private val controller: NavHostController) : ViewModel() {
 
     fun login(username: String, password: String) {
         viewModelScope.launch {
-            _state.setToken(
-                TokenInfo(
+            _state.set(
+                Token(
                     value = "$username:$password",
                     expiresIn = null,
-                    provider = TokenProvider.PASSWORD
+                    provider = Provider.PASSWORD
                 )
             )
         }
@@ -67,14 +56,23 @@ class AuthViewModel(private val controller: NavHostController) : ViewModel() {
 
     fun logout() {
         viewModelScope.launch {
-            _authUser.emit(null)
-            controller.navigateTo(Screen.Login)
+            _state.set(null)
+            controller.navigateTo(Route.Login)
         }
     }
 
-    private fun getProviderSettings(provider: TokenProvider): OAuthSettings? {
+    private fun getUserFromToken(it: Token): User {
+        return User(
+            id = createUniqueString(),
+            username = "",
+            email = emptyList(),
+            token = it
+        )
+    }
+
+    private fun getProviderSettings(provider: Provider): OAuthSettings? {
         return when (provider) {
-            TokenProvider.GOOGLE -> OAuthSettings(
+            Provider.GOOGLE -> OAuthSettings(
                 authorizationEndpoint = "https://accounts.google.com/o/oauth2/auth",
                 tokenEndpoint = "https://oauth2.googleapis.com/token",
                 clientId = "191033215032-36m9077g5pqd2l67i686qslb50mtveha.apps.googleusercontent.com",
@@ -84,7 +82,7 @@ class AuthViewModel(private val controller: NavHostController) : ViewModel() {
                 provider = provider
             )
 
-            TokenProvider.YANDEX -> OAuthSettings(
+            Provider.YANDEX -> OAuthSettings(
                 authorizationEndpoint = "",
                 tokenEndpoint = "",
                 clientId = "",
@@ -94,7 +92,7 @@ class AuthViewModel(private val controller: NavHostController) : ViewModel() {
                 provider = provider
             )
 
-            TokenProvider.PASSWORD -> null
+            Provider.PASSWORD -> null
             else -> null
         }
     }

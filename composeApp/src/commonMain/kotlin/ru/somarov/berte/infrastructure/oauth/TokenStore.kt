@@ -2,11 +2,11 @@ package ru.somarov.berte.infrastructure.oauth
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import ru.somarov.berte.application.dto.auth.TokenInfo
+import ru.somarov.berte.application.dto.auth.Token
 
 class TokenStore {
-    private val _tokenFlow = MutableStateFlow<TokenInfo?>(null)
+    private val _tokenFlow = MutableStateFlow<Token?>(null)
     val tokenFlow = _tokenFlow.asStateFlow()
 
-    suspend fun setToken(token: TokenInfo?) = _tokenFlow.emit(token)
+    suspend fun set(token: Token?) = _tokenFlow.emit(token)
 }

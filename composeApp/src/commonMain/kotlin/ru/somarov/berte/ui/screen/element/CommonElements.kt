@@ -1,4 +1,4 @@
-package ru.somarov.berte.ui.element
+package ru.somarov.berte.ui.screen.element
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
