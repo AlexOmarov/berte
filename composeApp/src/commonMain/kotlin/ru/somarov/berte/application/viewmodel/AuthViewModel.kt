@@ -29,7 +29,10 @@ class AuthViewModel(private val controller: NavHostController) : ViewModel() {
         _state.tokenFlow
             .filterNotNull()
             .onEach {
+                // TODO: try for user retrieval
                 _authUser.emit(getUserFromToken(it))
+                // TODO: not navigate, but issue a command to some sort of queue, which will be
+                // executed after compose is loaded and drawn
                 controller.navigateTo(Route.Home)
             }
             .launchIn(viewModelScope)
@@ -62,6 +65,7 @@ class AuthViewModel(private val controller: NavHostController) : ViewModel() {
     }
 
     private fun getUserFromToken(it: Token): User {
+        // TODO: get user from token, throw exceptions if needed
         return User(
             id = createUniqueString(),
             username = "",
