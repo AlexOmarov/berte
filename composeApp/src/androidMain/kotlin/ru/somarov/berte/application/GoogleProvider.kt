@@ -3,6 +3,7 @@ package ru.somarov.berte.application
 import android.net.Uri
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import io.ktor.util.encodeBase64
 import kotlinx.coroutines.launch
@@ -21,6 +22,10 @@ import ru.somarov.berte.ui.OAuthActivity
 
 class GoogleProvider : OIDAndroidProvider {
     override fun authenticate(store: TokenStore, settings: OAuthSettings, activity: OAuthActivity) {
+        check(activity.lifecycle.currentState == Lifecycle.State.CREATED) {
+            "Cannot process oauth authentication using activity in states other than created." +
+                "Current: ${activity.lifecycle.currentState}"
+        }
         val serviceConfig = AuthorizationServiceConfiguration(
             Uri.parse(settings.authorizationEndpoint),
             Uri.parse(settings.tokenEndpoint)
