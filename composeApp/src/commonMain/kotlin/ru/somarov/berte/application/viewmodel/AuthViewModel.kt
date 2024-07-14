@@ -3,6 +3,7 @@ package ru.somarov.berte.application.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import io.ktor.client.HttpClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
@@ -19,7 +20,10 @@ import ru.somarov.berte.infrastructure.oauth.startOAuth
 import ru.somarov.berte.infrastructure.uuid.createUniqueString
 import ru.somarov.berte.ui.Route
 
-class AuthViewModel(private val controller: NavHostController) : ViewModel() {
+class AuthViewModel(
+    private val controller: NavHostController,
+    private val client: HttpClient
+) : ViewModel() {
 
     private val _authUser = MutableStateFlow<User?>(null)
     private val _state = TokenStore()

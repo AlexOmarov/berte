@@ -5,17 +5,16 @@ sealed interface CommonResult<T> {
     class Error<T>(val error: Throwable) : CommonResult<T>
     class Loading<T> : CommonResult<T>
     class Empty<T> : CommonResult<T>
-}
 
-fun <T> Result<T>.asCommonResult(): CommonResult<T> {
-    this.onFailure { return CommonResult.Error(it) }
-        .onSuccess { return CommonResult.Success(it) }
-    return CommonResult.Empty()
-}
+    fun <T> Result<T>.asCommonResult(): CommonResult<T> {
+        this.onFailure { return Error(it) }
+            .onSuccess { return Success(it) }
+        return Empty()
+    }
 
-fun <T> CommonResult<T>.getOrNull(): T? {
-    return if (this is CommonResult.Success) data else null
-}
+    fun <T> CommonResult<T>.getOrNull(): T? {
+        return if (this is Success) data else null
+    }
 
-fun <T> CommonResult<T>.isSuccess(): Boolean =
-    this is CommonResult.Success<T>
+    fun <T> CommonResult<T>.isSuccess(): Boolean = this is Success<T>
+}
