@@ -41,9 +41,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.jetbrains.compose.resources.painterResource
-import ru.somarov.berte.application.dto.auth.Provider
 import ru.somarov.berte.application.viewmodel.AuthViewModel
 import ru.somarov.berte.infrastructure.navigation.navigateTo
+import ru.somarov.berte.infrastructure.oauth.OIDProvider
 import ru.somarov.berte.infrastructure.ui.rememberContext
 import ru.somarov.berte.infrastructure.ui.rememberOrientation
 import ru.somarov.berte.infrastructure.ui.rememberPlatform
@@ -270,22 +270,22 @@ private fun Modifier.scrollByPlatform(): Modifier {
 internal fun LoginProviders(viewModel: AuthViewModel) {
     val context = rememberContext()
 
-    FilledTonalIconButton(onClick = { viewModel.login(context, Provider.GOOGLE) }) {
+    FilledTonalIconButton(onClick = { viewModel.login(context, OIDProvider.GOOGLE) }) {
         Icon(painter = painterResource(Res.drawable.google), contentDescription = "Google")
     }
-    FilledTonalIconButton(onClick = { viewModel.login(context, Provider.YANDEX) }) {
+    FilledTonalIconButton(onClick = { viewModel.login(context, OIDProvider.YANDEX) }) {
         Icon(painter = painterResource(Res.drawable.yandex), contentDescription = "Yandex")
     }
-    FilledTonalIconButton(onClick = { viewModel.login(context, Provider.APPLE) }) {
+    FilledTonalIconButton(onClick = { viewModel.login(context, OIDProvider.APPLE) }) {
         Icon(painter = painterResource(Res.drawable.apple), contentDescription = "Apple")
     }
-    FilledTonalIconButton(onClick = { viewModel.login(context, Provider.OK) }) {
+    FilledTonalIconButton(onClick = { viewModel.login(context, OIDProvider.OK) }) {
         Icon(painter = painterResource(Res.drawable.ok), contentDescription = "OK")
     }
-    FilledTonalIconButton(onClick = { viewModel.login(context, Provider.TELEGRAM) }) {
+    FilledTonalIconButton(onClick = { viewModel.login(context, OIDProvider.TELEGRAM) }) {
         Icon(painter = painterResource(Res.drawable.telegram), contentDescription = "Telegram")
     }
-    FilledTonalIconButton(onClick = { viewModel.login(context, Provider.VK) }) {
+    FilledTonalIconButton(onClick = { viewModel.login(context, OIDProvider.VK) }) {
         Icon(painter = painterResource(Res.drawable.vk), contentDescription = "VK")
     }
 }

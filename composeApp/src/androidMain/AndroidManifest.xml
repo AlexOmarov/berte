@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.OAuthStarterActivity"
+            android:name=".ui.OAuthActivity"
             android:exported="false"
             android:theme="@style/AppTheme.Fullscreen"
             android:label="@string/oauth_title_activity"/>

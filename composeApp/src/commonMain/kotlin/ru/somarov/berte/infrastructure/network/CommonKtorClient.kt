@@ -18,6 +18,8 @@ import io.ktor.http.HttpStatusCode.Companion.GatewayTimeout
 import io.ktor.http.HttpStatusCode.Companion.RequestTimeout
 import io.ktor.http.HttpStatusCode.Companion.ServiceUnavailable
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.last
 import kotlinx.serialization.json.Json
 
 fun getDefaultClient(props: HttpClientProps): HttpClient {
@@ -63,7 +65,7 @@ fun getDefaultClient(props: HttpClientProps): HttpClient {
 data class HttpClientProps(
     val deflateFactor: Float = 1.0F,
     val gzipFactor: Float = 0.9F,
-    val tokenStorage: List<BearerTokens>,
+    val tokenStorage: Flow<BearerTokens>,
     val requestTimeoutMillis: Long = 5000L,
     val socketTimeoutMillis: Long = 5000L,
     val connectTimeoutMillis: Long = 5000L,

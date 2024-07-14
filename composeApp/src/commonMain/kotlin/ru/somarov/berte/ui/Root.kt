@@ -33,9 +33,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import io.ktor.client.plugins.auth.providers.BearerTokens
+import kotlinx.coroutines.flow.map
 import ru.somarov.berte.application.dto.auth.User
 import ru.somarov.berte.application.viewmodel.AuthViewModel
-import ru.somarov.berte.infrastructure.uuid.createUniqueString
+import ru.somarov.berte.infrastructure.network.HttpClientProps
+import ru.somarov.berte.infrastructure.network.getDefaultClient
+import ru.somarov.berte.infrastructure.oauth.TokenStore
 import ru.somarov.berte.ui.screen.HomeScreen
 import ru.somarov.berte.ui.screen.LoginScreen
 import ru.somarov.berte.ui.screen.RegisterScreen
@@ -47,7 +51,8 @@ fun Root(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
-    val viewModel = viewModel(key = createUniqueString()) { AuthViewModel(navController) }
+    val store = TokenStore()
+    val viewModel = viewModel { createAuthViewModel(navController, store) }
 
     val user by viewModel.user.collectAsState()
     var openUser by remember { mutableStateOf(false) }
@@ -97,6 +102,19 @@ fun Root(
                 }
         }
     }
+}
+
+fun createAuthViewModel(navController: NavHostController, store: TokenStore): AuthViewModel {
+    return AuthViewModel(
+        navController, getDefaultClient(
+            HttpClientProps(tokenStorage = store.tokenFlow.map {
+                BearerTokens(
+                    it!!.value,
+                    it.value
+                )
+            })
+        ), store
+    )
 }
 
 @Suppress("LongParameterList")

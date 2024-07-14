@@ -6,5 +6,9 @@ import kotlinx.serialization.Serializable
 data class Token(
     val value: String,
     val expiresIn: Long?,
-    val provider: Provider
-)
+    val tokenProvider: TokenProvider
+) {
+    enum class TokenProvider {
+        GOOGLE, YANDEX, OK, TELEGRAM, VK, APPLE, PASSWORD
+    }
+}
