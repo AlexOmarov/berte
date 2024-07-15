@@ -48,15 +48,7 @@ class GoogleProvider : OIDAndroidProvider<ActivityResult, Intent> {
         val authIntent = authService.getAuthorizationRequestIntent(authRequest)
 
         return OAuthProcess(
-            { result ->
-                activity.lifecycleScope.launch {
-                    handleOAuthResult(
-                        result,
-                        activity,
-                        store
-                    )
-                }
-            },
+            { handleOAuthResult(it, activity, store) },
             ActivityResultContracts.StartActivityForResult(),
             authIntent
         )

@@ -1,26 +1,27 @@
 package ru.somarov.berte.application
 
-import androidx.lifecycle.lifecycleScope
 import com.yandex.authsdk.YandexAuthLoginOptions
 import com.yandex.authsdk.YandexAuthOptions
 import com.yandex.authsdk.YandexAuthResult
 import com.yandex.authsdk.YandexAuthResult.Success
 import com.yandex.authsdk.YandexAuthSdk
 import com.yandex.authsdk.internal.strategy.LoginType
-import kotlinx.coroutines.launch
 import ru.somarov.berte.application.dto.auth.Token
 import ru.somarov.berte.infrastructure.oauth.OAuthSettings
 import ru.somarov.berte.infrastructure.oauth.TokenStore
 import ru.somarov.berte.ui.OAuthActivity
 
 class YandexProvider : OIDAndroidProvider<YandexAuthResult, YandexAuthLoginOptions> {
-    override fun formAuthProcess(store: TokenStore, settings: OAuthSettings, activity: OAuthActivity):
-        OAuthProcess<YandexAuthResult, YandexAuthLoginOptions> {
+    override fun formAuthProcess(
+        store: TokenStore,
+        settings: OAuthSettings,
+        activity: OAuthActivity
+    ): OAuthProcess<YandexAuthResult, YandexAuthLoginOptions> {
         val loginOptions = YandexAuthLoginOptions(loginType = LoginType.NATIVE)
         val sdk = YandexAuthSdk.create(YandexAuthOptions(activity.applicationContext, false))
 
         return OAuthProcess(
-            { result -> activity.lifecycleScope.launch { store.set(formToken(result)) } },
+            { result -> store.set(formToken(result)) },
             sdk.contract,
             loginOptions
         )

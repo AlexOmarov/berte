@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import ru.somarov.berte.application.GoogleProvider
 import ru.somarov.berte.application.OIDAndroidProvider
@@ -33,7 +34,9 @@ class OAuthActivity : AppCompatActivity() {
             (getProviderByTokenProvider(provider.tokenProvider) as OIDAndroidProvider<Any, Any>)
                 .formAuthProcess(store, provider.settings, this)
 
-        registerForActivityResult(process.contract) { process.processResult(it) }.launch(process.launchOptions)
+        registerForActivityResult(process.contract) {
+            lifecycleScope.launch { process.processResult(it) }
+        }.launch(process.launchOptions)
 
         val view = ComposeView(this).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
