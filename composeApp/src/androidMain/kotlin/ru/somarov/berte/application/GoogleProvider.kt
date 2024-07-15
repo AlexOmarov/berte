@@ -1,9 +1,9 @@
 package ru.somarov.berte.application
 
+import android.content.Intent
 import android.net.Uri
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import io.ktor.util.encodeBase64
 import kotlinx.coroutines.launch
@@ -20,12 +20,9 @@ import ru.somarov.berte.infrastructure.oauth.TokenStore
 import ru.somarov.berte.infrastructure.uuid.createUniqueString
 import ru.somarov.berte.ui.OAuthActivity
 
-class GoogleProvider : OIDAndroidProvider {
-    override fun authenticate(store: TokenStore, settings: OAuthSettings, activity: OAuthActivity) {
-        check(activity.lifecycle.currentState == Lifecycle.State.CREATED) {
-            "Cannot process oauth authentication using activity in states other than created." +
-                "Current: ${activity.lifecycle.currentState}"
-        }
+class GoogleProvider : OIDAndroidProvider<ActivityResult, Intent> {
+    override fun formAuthProcess(store: TokenStore, settings: OAuthSettings, activity: OAuthActivity):
+        OAuthProcess<ActivityResult, Intent> {
         val serviceConfig = AuthorizationServiceConfiguration(
             Uri.parse(settings.authorizationEndpoint),
             Uri.parse(settings.tokenEndpoint)
@@ -50,9 +47,19 @@ class GoogleProvider : OIDAndroidProvider {
         val authService = AuthorizationService(activity)
         val authIntent = authService.getAuthorizationRequestIntent(authRequest)
 
-        activity.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            activity.lifecycleScope.launch { handleOAuthResult(it, activity, store) }
-        }.launch(authIntent)
+        return OAuthProcess(
+            { result ->
+                activity.lifecycleScope.launch {
+                    handleOAuthResult(
+                        result,
+                        activity,
+                        store
+                    )
+                }
+            },
+            ActivityResultContracts.StartActivityForResult(),
+            authIntent
+        )
     }
 
     override fun getProvider(): Token.TokenProvider {

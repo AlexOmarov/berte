@@ -20,6 +20,7 @@ import ru.somarov.berte.ui.screen.element.WaitBox
 
 class OAuthActivity : AppCompatActivity() {
 
+    @Suppress("kotlin:S6530") // think of how to remove unchecked cast
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -28,8 +29,11 @@ class OAuthActivity : AppCompatActivity() {
 
         store.tokenFlow.onEach { finish() }.launchIn(lifecycleScope)
 
-        getProviderByTokenProvider(provider.tokenProvider)
-            .authenticate(store, provider.settings, this)
+        val process =
+            (getProviderByTokenProvider(provider.tokenProvider) as OIDAndroidProvider<Any, Any>)
+                .formAuthProcess(store, provider.settings, this)
+
+        registerForActivityResult(process.contract) { process.processResult(it) }.launch(process.launchOptions)
 
         val view = ComposeView(this).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -46,12 +50,12 @@ class OAuthActivity : AppCompatActivity() {
     }
 
     companion object {
-        private val providers = listOf(
+        private val providers: List<OIDAndroidProvider<*, *>> = listOf(
             YandexProvider(),
             GoogleProvider()
         )
 
-        fun getProviderByTokenProvider(provider: Token.TokenProvider): OIDAndroidProvider {
+        fun getProviderByTokenProvider(provider: Token.TokenProvider): OIDAndroidProvider<*, *> {
             return providers.first { it.getProvider() == provider }
         }
     }
