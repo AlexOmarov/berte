@@ -21,7 +21,7 @@ import ru.somarov.berte.ui.screen.element.WaitBox
 
 class OAuthActivity : AppCompatActivity() {
 
-    @Suppress("kotlin:S6530") // think of how to remove unchecked cast
+    @Suppress("kotlin:S6530", "UNCHECKED_CAST") // think of how to remove unchecked cast
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
