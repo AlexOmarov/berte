@@ -66,7 +66,7 @@ fun LoginScreen(
 ) {
     val orientation = rememberOrientation()
     when (orientation) {
-        Orientation.PORTRAIT -> LoginScreenContentPortrait(
+        Orientation.PORTRAIT -> LoginScreenPortrait(
             viewModel = viewModel,
             controller = controller,
             modifier = Modifier.verticalScroll(
@@ -74,7 +74,7 @@ fun LoginScreen(
             )
         )
 
-        Orientation.LANDSCAPE -> LoginScreenContentLandscape(
+        Orientation.LANDSCAPE -> LoginScreenLandscape(
             viewModel = viewModel,
             controller = controller,
         )
@@ -168,92 +168,65 @@ private fun PasswordOutlinedText(
 
 @Suppress("LongMethod", "CyclomaticComplexMethod") // refactor
 @Composable
-private fun LoginScreenContentPortrait(
+private fun LoginScreenPortrait(
     viewModel: AuthViewModel,
     controller: NavController,
     modifier: Modifier = Modifier
 ) {
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
     Column(modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-        Image(
-            painter = painterResource(Res.drawable.berte),
-            contentDescription = "berte",
-            modifier = Modifier.padding(16.dp).size(80.dp)
-        )
-        Text("Login in Berte", style = MaterialTheme.typography.displayMedium)
-        Spacer(Modifier.height(10.dp))
-        UsernameOutlinedText(username, Modifier.padding(16.dp).fillMaxWidth()) {
-            username = it
-        }
-        PasswordOutlinedText(password, Modifier.padding(16.dp).fillMaxWidth()) {
-            password = it
-        }
-        Button(
-            onClick = {
-                viewModel.login(
-                    username = username, password = password
-                )
-            }, enabled = username.isNotEmpty() && password.isNotEmpty()
-        ) {
-            Text("Login with password")
-        }
-
-        Spacer(Modifier.height(20.dp))
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            LoginProviders(viewModel)
-        }
-        Spacer(Modifier.height(20.dp))
-        TextButton(onClick = { controller.navigateTo(Route.Register) }) {
-            Text("Create account")
-        }
+        LoginScreenContent(viewModel, controller)
     }
 }
 
 @Suppress("LongMethod", "CyclomaticComplexMethod") // refactor
 @Composable
-private fun LoginScreenContentLandscape(
+private fun LoginScreenLandscape(
     viewModel: AuthViewModel,
     controller: NavController,
     modifier: Modifier = Modifier
 ) {
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
     Box(modifier.fillMaxSize().scrollByPlatform(), contentAlignment = Alignment.Center) {
         Column(Modifier.width(350.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            Image(
-                painter = painterResource(Res.drawable.berte),
-                contentDescription = "berte",
-                modifier = Modifier.padding(16.dp).size(80.dp)
-            )
-            Text("Login in Berte", style = MaterialTheme.typography.displayMedium)
-            Spacer(Modifier.height(10.dp))
-            UsernameOutlinedText(username, Modifier.padding(16.dp).fillMaxWidth()) {
-                username = it
-            }
-            PasswordOutlinedText(password, Modifier.padding(16.dp).fillMaxWidth()) {
-                password = it
-            }
-            Button(
-                onClick = {
-                    viewModel.login(
-                        username = username, password = password
-                    )
-                }, enabled = username.isNotEmpty() && password.isNotEmpty()
-            ) {
-                Text("Login with password")
-            }
-            Spacer(Modifier.height(20.dp))
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                LoginProviders(viewModel)
-            }
-            Spacer(Modifier.height(20.dp))
-
-            TextButton(onClick = { controller.navigateTo(Route.Register) }) {
-                Text("Create account")
-            }
+            LoginScreenContent(viewModel, controller)
             Spacer(Modifier.height(40.dp))
         }
+    }
+}
+
+@Composable
+private fun LoginScreenContent(viewModel: AuthViewModel, controller: NavController) {
+    var username by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+
+    Image(
+        painter = painterResource(Res.drawable.berte),
+        contentDescription = "berte",
+        modifier = Modifier.padding(16.dp).size(80.dp)
+    )
+    Text("Login in Berte", style = MaterialTheme.typography.displayMedium)
+    Spacer(Modifier.height(10.dp))
+    UsernameOutlinedText(username, Modifier.padding(16.dp).fillMaxWidth()) {
+        username = it
+    }
+    PasswordOutlinedText(password, Modifier.padding(16.dp).fillMaxWidth()) {
+        password = it
+    }
+    Button(
+        onClick = {
+            viewModel.login(
+                username = username, password = password
+            )
+        }, enabled = username.isNotEmpty() && password.isNotEmpty()
+    ) {
+        Text("Login with password")
+    }
+    Spacer(Modifier.height(20.dp))
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+        LoginProviders(viewModel)
+    }
+    Spacer(Modifier.height(20.dp))
+    TextButton(onClick = { controller.navigateTo(Route.Register) }) {
+        Text("Create account")
     }
 }
 
