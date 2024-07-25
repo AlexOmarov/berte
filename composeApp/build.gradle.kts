@@ -5,10 +5,14 @@ import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlin.serialization)
+
     alias(libs.plugins.androidApplication)
+
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.kotlin.serialization)
+
+    alias(libs.plugins.kover)
 }
 
 compose.resources {
@@ -81,6 +85,15 @@ kotlin {
 
             implementation(libs.androidx.kmp.navigation)
             implementation(libs.androidx.kmp.lifecycle.viewmodel)
+        }
+
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(kotlin("test-common"))
+            implementation(kotlin("test-annotations-common"))
+
+            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+            implementation(compose.uiTest)
         }
 
         wasmJsMain.dependencies {
